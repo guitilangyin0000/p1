@@ -1,0 +1,322 @@
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_PROGRAM_AUTHOR	Darren Hiebert	/dhiebert@users.sourceforge.net/
+!_TAG_PROGRAM_NAME	Exuberant Ctags	//
+!_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
+!_TAG_PROGRAM_VERSION	5.9~svn20110310	//
+Client	client_api.go	/^type Client interface {$/;"	t
+Close	client_impl.go	/^func (c *client) Close() error {$/;"	f
+Close	server_impl.go	/^func (s *server) Close() error {$/;"	f
+CloseConn	server_impl.go	/^func (s *server) CloseConn(connID int) error {$/;"	f
+ConnID	client_impl.go	/^func (c *client) ConnID() int {$/;"	f
+DefaultEpochLimit	params.go	/^	DefaultEpochLimit  = 5$/;"	c
+DefaultEpochMillis	params.go	/^	DefaultEpochMillis = 2000$/;"	c
+DefaultWindowSize	params.go	/^	DefaultWindowSize  = 1$/;"	c
+LOGE	server_impl.go	/^	LOGE = log.New(os.Stderr, "Error ", log.Lmicroseconds|log.Lshortfile)$/;"	v
+LOGV	server_impl.go	/^	LOGV = log.New(ioutil.Discard, "VERBOSE ", log.Lmicroseconds|log.Lshortfile)$/;"	v
+Message	message.go	/^type Message struct {$/;"	t
+MsgAck	message.go	/^	MsgAck                    \/\/ Sent by clients\/servers to ack connect\/data msgs.$/;"	c
+MsgConnect	message.go	/^	MsgConnect MsgType = iota \/\/ Sent by clients to make a connection w\/ the server.$/;"	c
+MsgData	message.go	/^	MsgData                   \/\/ Sent by clients\/servers to send data.$/;"	c
+MsgType	message.go	/^type MsgType int$/;"	t
+NewAck	message.go	/^func NewAck(connID, seqNum int) *Message {$/;"	f
+NewClient	client_impl.go	/^func NewClient(hostport string, params *Params) (Client, error) {$/;"	f
+NewConnect	message.go	/^func NewConnect() *Message {$/;"	f
+NewData	message.go	/^func NewData(connID, seqNum int, payload []byte) *Message {$/;"	f
+NewParams	params.go	/^func NewParams() *Params {$/;"	f
+NewServer	server_impl.go	/^func NewServer(port int, params *Params) (server, error) {$/;"	f
+Params	params.go	/^type Params struct {$/;"	t
+Read	client_impl.go	/^func (c *client) Read() ([]byte, error) {$/;"	f
+Read	server_impl.go	/^func (s *server) Read() (int, []byte, error) {$/;"	f
+Server	server_api.go	/^type Server interface {$/;"	t
+String	message.go	/^func (m *Message) String() string {$/;"	f
+String	params.go	/^func (p *Params) String() string {$/;"	f
+TestBasic1	lsp1_test.go	/^func TestBasic1(t *testing.T) {$/;"	f
+TestBasic2	lsp1_test.go	/^func TestBasic2(t *testing.T) {$/;"	f
+TestBasic3	lsp1_test.go	/^func TestBasic3(t *testing.T) {$/;"	f
+TestBasic4	lsp1_test.go	/^func TestBasic4(t *testing.T) {$/;"	f
+TestBasic5	lsp1_test.go	/^func TestBasic5(t *testing.T) {$/;"	f
+TestBasic6	lsp1_test.go	/^func TestBasic6(t *testing.T) {$/;"	f
+TestBasic7	lsp1_test.go	/^func TestBasic7(t *testing.T) {$/;"	f
+TestBasic8	lsp1_test.go	/^func TestBasic8(t *testing.T) {$/;"	f
+TestBasic9	lsp1_test.go	/^func TestBasic9(t *testing.T) {$/;"	f
+TestClientClose1	lsp3_test.go	/^func TestClientClose1(t *testing.T) {$/;"	f
+TestClientClose2	lsp3_test.go	/^func TestClientClose2(t *testing.T) {$/;"	f
+TestClientToServer1	lsp4_test.go	/^func TestClientToServer1(t *testing.T) {$/;"	f
+TestClientToServer2	lsp4_test.go	/^func TestClientToServer2(t *testing.T) {$/;"	f
+TestClientToServer3	lsp4_test.go	/^func TestClientToServer3(t *testing.T) {$/;"	f
+TestRobust1	lsp1_test.go	/^func TestRobust1(t *testing.T) {$/;"	f
+TestRobust2	lsp1_test.go	/^func TestRobust2(t *testing.T) {$/;"	f
+TestRobust3	lsp1_test.go	/^func TestRobust3(t *testing.T) {$/;"	f
+TestRobust4	lsp1_test.go	/^func TestRobust4(t *testing.T) {$/;"	f
+TestRobust5	lsp1_test.go	/^func TestRobust5(t *testing.T) {$/;"	f
+TestRobust6	lsp1_test.go	/^func TestRobust6(t *testing.T) {$/;"	f
+TestRoundTrip1	lsp4_test.go	/^func TestRoundTrip1(t *testing.T) {$/;"	f
+TestRoundTrip2	lsp4_test.go	/^func TestRoundTrip2(t *testing.T) {$/;"	f
+TestRoundTrip3	lsp4_test.go	/^func TestRoundTrip3(t *testing.T) {$/;"	f
+TestSendReceive1	lsp1_test.go	/^func TestSendReceive1(t *testing.T) {$/;"	f
+TestSendReceive2	lsp1_test.go	/^func TestSendReceive2(t *testing.T) {$/;"	f
+TestSendReceive3	lsp1_test.go	/^func TestSendReceive3(t *testing.T) {$/;"	f
+TestServerClose1	lsp3_test.go	/^func TestServerClose1(t *testing.T) {$/;"	f
+TestServerClose2	lsp3_test.go	/^func TestServerClose2(t *testing.T) {$/;"	f
+TestServerCloseConns1	lsp3_test.go	/^func TestServerCloseConns1(t *testing.T) {$/;"	f
+TestServerCloseConns2	lsp3_test.go	/^func TestServerCloseConns2(t *testing.T) {$/;"	f
+TestServerFastClose1	lsp4_test.go	/^func TestServerFastClose1(t *testing.T) {$/;"	f
+TestServerFastClose2	lsp4_test.go	/^func TestServerFastClose2(t *testing.T) {$/;"	f
+TestServerFastClose3	lsp4_test.go	/^func TestServerFastClose3(t *testing.T) {$/;"	f
+TestServerSlowStart1	lsp3_test.go	/^func TestServerSlowStart1(t *testing.T) {$/;"	f
+TestServerSlowStart2	lsp3_test.go	/^func TestServerSlowStart2(t *testing.T) {$/;"	f
+TestServerToClient1	lsp4_test.go	/^func TestServerToClient1(t *testing.T) {$/;"	f
+TestServerToClient2	lsp4_test.go	/^func TestServerToClient2(t *testing.T) {$/;"	f
+TestServerToClient3	lsp4_test.go	/^func TestServerToClient3(t *testing.T) {$/;"	f
+TestWindow1	lsp2_test.go	/^func TestWindow1(t *testing.T) {$/;"	f
+TestWindow2	lsp2_test.go	/^func TestWindow2(t *testing.T) {$/;"	f
+TestWindow3	lsp2_test.go	/^func TestWindow3(t *testing.T) {$/;"	f
+TestWindow4	lsp2_test.go	/^func TestWindow4(t *testing.T) {$/;"	f
+TestWindow5	lsp2_test.go	/^func TestWindow5(t *testing.T) {$/;"	f
+TestWindow6	lsp2_test.go	/^func TestWindow6(t *testing.T) {$/;"	f
+Write	client_impl.go	/^func (c *client) Write(payload []byte) error {$/;"	f
+Write	server_impl.go	/^func (s *server) Write(connID int, payload []byte) error {$/;"	f
+buildClient	lsp3_test.go	/^func (ts *closeTestSystem) buildClient(clientID int) {$/;"	f
+buildServer	lsp3_test.go	/^func (ts *closeTestSystem) buildServer() {$/;"	f
+checkClientReadMsgs	lsp2_test.go	/^func (ts *windowTestSystem) checkClientReadMsgs(sentMsgs []string) {$/;"	f
+checkServerReadMsgs	lsp2_test.go	/^func (ts *windowTestSystem) checkServerReadMsgs(sentMsgs []string) {$/;"	f
+client	client_impl.go	/^type client struct {$/;"	t
+clientLit	server_impl.go	/^type clientLit struct {$/;"	t
+closeTestMode	lsp3_test.go	/^type closeTestMode int$/;"	t
+closeTestSystem	lsp3_test.go	/^type closeTestSystem struct {$/;"	t
+createClient	lsp3_test.go	/^func (ts *closeTestSystem) createClient(index int) error {$/;"	f
+createServer	lsp3_test.go	/^func (ts *closeTestSystem) createServer() error {$/;"	f
+defaultDelayEpochs	lsp3_test.go	/^	defaultDelayEpochs = 3$/;"	c
+defaultNumMsgs	lsp3_test.go	/^	defaultNumMsgs     = 10$/;"	c
+doClientClose	lsp3_test.go	/^	doClientClose$/;"	c
+doClientToServer	lsp4_test.go	/^	doClientToServer$/;"	c
+doMaxCapacity	lsp2_test.go	/^	doMaxCapacity windowTestMode = iota$/;"	c
+doRoundTrip	lsp4_test.go	/^	doRoundTrip$/;"	c
+doScatteredMsgs	lsp2_test.go	/^	doScatteredMsgs$/;"	c
+doServerClose	lsp3_test.go	/^	doServerClose$/;"	c
+doServerCloseConns	lsp3_test.go	/^	doServerCloseConns$/;"	c
+doServerFastClose	lsp4_test.go	/^	doServerFastClose syncTestMode = iota$/;"	c
+doServerToClient	lsp4_test.go	/^	doServerToClient$/;"	c
+doSlowStart	lsp3_test.go	/^	doSlowStart closeTestMode = iota$/;"	c
+epochHandler	server_impl.go	/^func (s *server) epochHandler() {$/;"	f
+lsp	client_api.go	/^package lsp$/;"	p
+lsp	client_impl.go	/^package lsp$/;"	p
+lsp	lsp1_test.go	/^package lsp$/;"	p
+lsp	lsp2_test.go	/^package lsp$/;"	p
+lsp	lsp3_test.go	/^package lsp$/;"	p
+lsp	lsp4_test.go	/^package lsp$/;"	p
+lsp	message.go	/^package lsp$/;"	p
+lsp	params.go	/^package lsp$/;"	p
+lsp	server_api.go	/^package lsp$/;"	p
+lsp	server_impl.go	/^package lsp$/;"	p
+lsp.Client	client_api.go	/^type Client interface {$/;"	t
+lsp.Close	client_impl.go	/^func (c *client) Close() error {$/;"	f
+lsp.Close	server_impl.go	/^func (s *server) Close() error {$/;"	f
+lsp.CloseConn	server_impl.go	/^func (s *server) CloseConn(connID int) error {$/;"	f
+lsp.ConnID	client_impl.go	/^func (c *client) ConnID() int {$/;"	f
+lsp.DefaultEpochLimit	params.go	/^	DefaultEpochLimit  = 5$/;"	c
+lsp.DefaultEpochMillis	params.go	/^	DefaultEpochMillis = 2000$/;"	c
+lsp.DefaultWindowSize	params.go	/^	DefaultWindowSize  = 1$/;"	c
+lsp.LOGE	server_impl.go	/^	LOGE = log.New(os.Stderr, "Error ", log.Lmicroseconds|log.Lshortfile)$/;"	v
+lsp.LOGV	server_impl.go	/^	LOGV = log.New(ioutil.Discard, "VERBOSE ", log.Lmicroseconds|log.Lshortfile)$/;"	v
+lsp.Message	message.go	/^type Message struct {$/;"	t
+lsp.MsgAck	message.go	/^	MsgAck                    \/\/ Sent by clients\/servers to ack connect\/data msgs.$/;"	c
+lsp.MsgConnect	message.go	/^	MsgConnect MsgType = iota \/\/ Sent by clients to make a connection w\/ the server.$/;"	c
+lsp.MsgData	message.go	/^	MsgData                   \/\/ Sent by clients\/servers to send data.$/;"	c
+lsp.MsgType	message.go	/^type MsgType int$/;"	t
+lsp.NewAck	message.go	/^func NewAck(connID, seqNum int) *Message {$/;"	f
+lsp.NewClient	client_impl.go	/^func NewClient(hostport string, params *Params) (Client, error) {$/;"	f
+lsp.NewConnect	message.go	/^func NewConnect() *Message {$/;"	f
+lsp.NewData	message.go	/^func NewData(connID, seqNum int, payload []byte) *Message {$/;"	f
+lsp.NewParams	params.go	/^func NewParams() *Params {$/;"	f
+lsp.NewServer	server_impl.go	/^func NewServer(port int, params *Params) (server, error) {$/;"	f
+lsp.Params	params.go	/^type Params struct {$/;"	t
+lsp.Read	client_impl.go	/^func (c *client) Read() ([]byte, error) {$/;"	f
+lsp.Read	server_impl.go	/^func (s *server) Read() (int, []byte, error) {$/;"	f
+lsp.Server	server_api.go	/^type Server interface {$/;"	t
+lsp.String	message.go	/^func (m *Message) String() string {$/;"	f
+lsp.String	params.go	/^func (p *Params) String() string {$/;"	f
+lsp.TestBasic1	lsp1_test.go	/^func TestBasic1(t *testing.T) {$/;"	f
+lsp.TestBasic2	lsp1_test.go	/^func TestBasic2(t *testing.T) {$/;"	f
+lsp.TestBasic3	lsp1_test.go	/^func TestBasic3(t *testing.T) {$/;"	f
+lsp.TestBasic4	lsp1_test.go	/^func TestBasic4(t *testing.T) {$/;"	f
+lsp.TestBasic5	lsp1_test.go	/^func TestBasic5(t *testing.T) {$/;"	f
+lsp.TestBasic6	lsp1_test.go	/^func TestBasic6(t *testing.T) {$/;"	f
+lsp.TestBasic7	lsp1_test.go	/^func TestBasic7(t *testing.T) {$/;"	f
+lsp.TestBasic8	lsp1_test.go	/^func TestBasic8(t *testing.T) {$/;"	f
+lsp.TestBasic9	lsp1_test.go	/^func TestBasic9(t *testing.T) {$/;"	f
+lsp.TestClientClose1	lsp3_test.go	/^func TestClientClose1(t *testing.T) {$/;"	f
+lsp.TestClientClose2	lsp3_test.go	/^func TestClientClose2(t *testing.T) {$/;"	f
+lsp.TestClientToServer1	lsp4_test.go	/^func TestClientToServer1(t *testing.T) {$/;"	f
+lsp.TestClientToServer2	lsp4_test.go	/^func TestClientToServer2(t *testing.T) {$/;"	f
+lsp.TestClientToServer3	lsp4_test.go	/^func TestClientToServer3(t *testing.T) {$/;"	f
+lsp.TestRobust1	lsp1_test.go	/^func TestRobust1(t *testing.T) {$/;"	f
+lsp.TestRobust2	lsp1_test.go	/^func TestRobust2(t *testing.T) {$/;"	f
+lsp.TestRobust3	lsp1_test.go	/^func TestRobust3(t *testing.T) {$/;"	f
+lsp.TestRobust4	lsp1_test.go	/^func TestRobust4(t *testing.T) {$/;"	f
+lsp.TestRobust5	lsp1_test.go	/^func TestRobust5(t *testing.T) {$/;"	f
+lsp.TestRobust6	lsp1_test.go	/^func TestRobust6(t *testing.T) {$/;"	f
+lsp.TestRoundTrip1	lsp4_test.go	/^func TestRoundTrip1(t *testing.T) {$/;"	f
+lsp.TestRoundTrip2	lsp4_test.go	/^func TestRoundTrip2(t *testing.T) {$/;"	f
+lsp.TestRoundTrip3	lsp4_test.go	/^func TestRoundTrip3(t *testing.T) {$/;"	f
+lsp.TestSendReceive1	lsp1_test.go	/^func TestSendReceive1(t *testing.T) {$/;"	f
+lsp.TestSendReceive2	lsp1_test.go	/^func TestSendReceive2(t *testing.T) {$/;"	f
+lsp.TestSendReceive3	lsp1_test.go	/^func TestSendReceive3(t *testing.T) {$/;"	f
+lsp.TestServerClose1	lsp3_test.go	/^func TestServerClose1(t *testing.T) {$/;"	f
+lsp.TestServerClose2	lsp3_test.go	/^func TestServerClose2(t *testing.T) {$/;"	f
+lsp.TestServerCloseConns1	lsp3_test.go	/^func TestServerCloseConns1(t *testing.T) {$/;"	f
+lsp.TestServerCloseConns2	lsp3_test.go	/^func TestServerCloseConns2(t *testing.T) {$/;"	f
+lsp.TestServerFastClose1	lsp4_test.go	/^func TestServerFastClose1(t *testing.T) {$/;"	f
+lsp.TestServerFastClose2	lsp4_test.go	/^func TestServerFastClose2(t *testing.T) {$/;"	f
+lsp.TestServerFastClose3	lsp4_test.go	/^func TestServerFastClose3(t *testing.T) {$/;"	f
+lsp.TestServerSlowStart1	lsp3_test.go	/^func TestServerSlowStart1(t *testing.T) {$/;"	f
+lsp.TestServerSlowStart2	lsp3_test.go	/^func TestServerSlowStart2(t *testing.T) {$/;"	f
+lsp.TestServerToClient1	lsp4_test.go	/^func TestServerToClient1(t *testing.T) {$/;"	f
+lsp.TestServerToClient2	lsp4_test.go	/^func TestServerToClient2(t *testing.T) {$/;"	f
+lsp.TestServerToClient3	lsp4_test.go	/^func TestServerToClient3(t *testing.T) {$/;"	f
+lsp.TestWindow1	lsp2_test.go	/^func TestWindow1(t *testing.T) {$/;"	f
+lsp.TestWindow2	lsp2_test.go	/^func TestWindow2(t *testing.T) {$/;"	f
+lsp.TestWindow3	lsp2_test.go	/^func TestWindow3(t *testing.T) {$/;"	f
+lsp.TestWindow4	lsp2_test.go	/^func TestWindow4(t *testing.T) {$/;"	f
+lsp.TestWindow5	lsp2_test.go	/^func TestWindow5(t *testing.T) {$/;"	f
+lsp.TestWindow6	lsp2_test.go	/^func TestWindow6(t *testing.T) {$/;"	f
+lsp.Write	client_impl.go	/^func (c *client) Write(payload []byte) error {$/;"	f
+lsp.Write	server_impl.go	/^func (s *server) Write(connID int, payload []byte) error {$/;"	f
+lsp.buildClient	lsp3_test.go	/^func (ts *closeTestSystem) buildClient(clientID int) {$/;"	f
+lsp.buildServer	lsp3_test.go	/^func (ts *closeTestSystem) buildServer() {$/;"	f
+lsp.checkClientReadMsgs	lsp2_test.go	/^func (ts *windowTestSystem) checkClientReadMsgs(sentMsgs []string) {$/;"	f
+lsp.checkServerReadMsgs	lsp2_test.go	/^func (ts *windowTestSystem) checkServerReadMsgs(sentMsgs []string) {$/;"	f
+lsp.client	client_impl.go	/^type client struct {$/;"	t
+lsp.clientLit	server_impl.go	/^type clientLit struct {$/;"	t
+lsp.closeTestMode	lsp3_test.go	/^type closeTestMode int$/;"	t
+lsp.closeTestSystem	lsp3_test.go	/^type closeTestSystem struct {$/;"	t
+lsp.createClient	lsp3_test.go	/^func (ts *closeTestSystem) createClient(index int) error {$/;"	f
+lsp.createServer	lsp3_test.go	/^func (ts *closeTestSystem) createServer() error {$/;"	f
+lsp.defaultDelayEpochs	lsp3_test.go	/^	defaultDelayEpochs = 3$/;"	c
+lsp.defaultNumMsgs	lsp3_test.go	/^	defaultNumMsgs     = 10$/;"	c
+lsp.doClientClose	lsp3_test.go	/^	doClientClose$/;"	c
+lsp.doClientToServer	lsp4_test.go	/^	doClientToServer$/;"	c
+lsp.doMaxCapacity	lsp2_test.go	/^	doMaxCapacity windowTestMode = iota$/;"	c
+lsp.doRoundTrip	lsp4_test.go	/^	doRoundTrip$/;"	c
+lsp.doScatteredMsgs	lsp2_test.go	/^	doScatteredMsgs$/;"	c
+lsp.doServerClose	lsp3_test.go	/^	doServerClose$/;"	c
+lsp.doServerCloseConns	lsp3_test.go	/^	doServerCloseConns$/;"	c
+lsp.doServerFastClose	lsp4_test.go	/^	doServerFastClose syncTestMode = iota$/;"	c
+lsp.doServerToClient	lsp4_test.go	/^	doServerToClient$/;"	c
+lsp.doSlowStart	lsp3_test.go	/^	doSlowStart closeTestMode = iota$/;"	c
+lsp.epochHandler	server_impl.go	/^func (s *server) epochHandler() {$/;"	f
+lsp.makeParams	lsp1_test.go	/^func makeParams(epochLimit, epochMillis, windowSize int) *Params {$/;"	f
+lsp.makeRandMsgs	lsp2_test.go	/^func (ts *windowTestSystem) makeRandMsgs(numMsgs int) []string {$/;"	f
+lsp.master	lsp4_test.go	/^func (ts *syncTestSystem) master() {$/;"	f
+lsp.messageMax	server_impl.go	/^	messageMax = 1024$/;"	c
+lsp.msgWrapper	server_impl.go	/^type msgWrapper struct {$/;"	t
+lsp.newCloseTestSystem	lsp3_test.go	/^func newCloseTestSystem(t *testing.T, mode closeTestMode) *closeTestSystem {$/;"	f
+lsp.newSyncTestSystem	lsp4_test.go	/^func newSyncTestSystem(t *testing.T, numClients, numMsgs int, mode syncTestMode, params *Params) *syncTestSystem {$/;"	f
+lsp.newTestSystem	lsp1_test.go	/^func newTestSystem(t *testing.T, numClients int, params *Params) *testSystem {$/;"	f
+lsp.newWindowTestSystem	lsp2_test.go	/^func newWindowTestSystem(t *testing.T, mode windowTestMode, numClients, numMsgs int, params *Params) *windowTestSystem {$/;"	f
+lsp.packetProcessor	server_impl.go	/^func (s *server) packetProcessor() {$/;"	f
+lsp.packetReceiver	server_impl.go	/^func (s *server) packetReceiver() {$/;"	f
+lsp.randSleep	lsp1_test.go	/^func (ts *testSystem) randSleep() {$/;"	f
+lsp.readFromAllClients	lsp2_test.go	/^func (ts *windowTestSystem) readFromAllClients(totalMsgs int, checkpoints ...int) {$/;"	f
+lsp.readFromServer	lsp2_test.go	/^func (ts *windowTestSystem) readFromServer(connID int, cli Client, totalMsgs int, checkpoints ...int) {$/;"	f
+lsp.run	server_impl.go	/^func (s *server) run() {$/;"	f
+lsp.runClient	lsp1_test.go	/^func (ts *testSystem) runClient(clientID int, doneChan chan<- bool) {$/;"	f
+lsp.runClient	lsp4_test.go	/^func (ts *syncTestSystem) runClient(clienti int) {$/;"	f
+lsp.runMaxCapacityTest	lsp2_test.go	/^func (ts *windowTestSystem) runMaxCapacityTest() {$/;"	f
+lsp.runNetwork	lsp4_test.go	/^func (ts *syncTestSystem) runNetwork() {$/;"	f
+lsp.runScatteredMsgsTest	lsp2_test.go	/^func (ts *windowTestSystem) runScatteredMsgsTest() {$/;"	f
+lsp.runServer	lsp1_test.go	/^func (ts *testSystem) runServer() {$/;"	f
+lsp.runServer	lsp4_test.go	/^func (ts *syncTestSystem) runServer() {$/;"	f
+lsp.runTest	lsp1_test.go	/^func (ts *testSystem) runTest(timeout int) {$/;"	f
+lsp.runTest	lsp2_test.go	/^func (ts *windowTestSystem) runTest() {$/;"	f
+lsp.runTest	lsp3_test.go	/^func (ts *closeTestSystem) runTest() {$/;"	f
+lsp.runTest	lsp4_test.go	/^func (ts *syncTestSystem) runTest() {$/;"	f
+lsp.server	server_impl.go	/^type server struct {$/;"	t
+lsp.serverEpoch	server_impl.go	/^func (s *server) serverEpoch() {$/;"	f
+lsp.setClientWriteDropPercent	lsp2_test.go	/^func (ts *windowTestSystem) setClientWriteDropPercent(percent int) {$/;"	f
+lsp.setDescription	lsp1_test.go	/^func (ts *testSystem) setDescription(desc string) *testSystem {$/;"	f
+lsp.setDescription	lsp2_test.go	/^func (ts *windowTestSystem) setDescription(desc string) *windowTestSystem {$/;"	f
+lsp.setDescription	lsp3_test.go	/^func (ts *closeTestSystem) setDescription(t string) *closeTestSystem {$/;"	f
+lsp.setDescription	lsp4_test.go	/^func (ts *syncTestSystem) setDescription(desc string) *syncTestSystem {$/;"	f
+lsp.setDropPercent	lsp1_test.go	/^func (ts *testSystem) setDropPercent(p int) *testSystem {$/;"	f
+lsp.setMaxEpochs	lsp2_test.go	/^func (ts *windowTestSystem) setMaxEpochs(maxEpochs int) *windowTestSystem {$/;"	f
+lsp.setMaxEpochs	lsp3_test.go	/^func (ts *closeTestSystem) setMaxEpochs(maxEpochs int) *closeTestSystem {$/;"	f
+lsp.setMaxEpochs	lsp4_test.go	/^func (ts *syncTestSystem) setMaxEpochs(maxEpochs int) *syncTestSystem {$/;"	f
+lsp.setMaxSleepMillis	lsp1_test.go	/^func (ts *testSystem) setMaxSleepMillis(ms int) *testSystem {$/;"	f
+lsp.setNumClients	lsp3_test.go	/^func (ts *closeTestSystem) setNumClients(numClients int) *closeTestSystem {$/;"	f
+lsp.setNumMsgs	lsp1_test.go	/^func (ts *testSystem) setNumMsgs(n int) *testSystem {$/;"	f
+lsp.setParams	lsp3_test.go	/^func (ts *closeTestSystem) setParams(epochLimit, epochMillis, windowSize int) *closeTestSystem {$/;"	f
+lsp.setServerWriteDropPercent	lsp2_test.go	/^func (ts *windowTestSystem) setServerWriteDropPercent(percent int) {$/;"	f
+lsp.signalClients	lsp4_test.go	/^func (ts *syncTestSystem) signalClients() {$/;"	f
+lsp.signalServer	lsp4_test.go	/^func (ts *syncTestSystem) signalServer() {$/;"	f
+lsp.streamToClient	lsp2_test.go	/^func (ts *windowTestSystem) streamToClient(connID int, sendMsgs []string) {$/;"	f
+lsp.streamToServer	lsp2_test.go	/^func (ts *windowTestSystem) streamToServer(connID int, cli Client, sendMsgs []string) {$/;"	f
+lsp.syncTestMode	lsp4_test.go	/^type syncTestMode int$/;"	t
+lsp.syncTestSystem	lsp4_test.go	/^type syncTestSystem struct {$/;"	t
+lsp.testSystem	lsp1_test.go	/^type testSystem struct {$/;"	t
+lsp.toggleNetwork	lsp4_test.go	/^func (ts *syncTestSystem) toggleNetwork() {$/;"	f
+lsp.waitForClients	lsp2_test.go	/^func (ts *windowTestSystem) waitForClients() {$/;"	f
+lsp.waitForClients	lsp4_test.go	/^func (ts *syncTestSystem) waitForClients() {$/;"	f
+lsp.waitForServer	lsp2_test.go	/^func (ts *windowTestSystem) waitForServer() {$/;"	f
+lsp.waitForServer	lsp4_test.go	/^func (ts *syncTestSystem) waitForServer() {$/;"	f
+lsp.windowTestMode	lsp2_test.go	/^type windowTestMode int$/;"	t
+lsp.windowTestSystem	lsp2_test.go	/^type windowTestSystem struct {$/;"	t
+lsp.writeParam	server_impl.go	/^type writeParam struct {$/;"	t
+makeParams	lsp1_test.go	/^func makeParams(epochLimit, epochMillis, windowSize int) *Params {$/;"	f
+makeRandMsgs	lsp2_test.go	/^func (ts *windowTestSystem) makeRandMsgs(numMsgs int) []string {$/;"	f
+master	lsp4_test.go	/^func (ts *syncTestSystem) master() {$/;"	f
+messageMax	server_impl.go	/^	messageMax = 1024$/;"	c
+msgWrapper	server_impl.go	/^type msgWrapper struct {$/;"	t
+newCloseTestSystem	lsp3_test.go	/^func newCloseTestSystem(t *testing.T, mode closeTestMode) *closeTestSystem {$/;"	f
+newSyncTestSystem	lsp4_test.go	/^func newSyncTestSystem(t *testing.T, numClients, numMsgs int, mode syncTestMode, params *Params) *syncTestSystem {$/;"	f
+newTestSystem	lsp1_test.go	/^func newTestSystem(t *testing.T, numClients int, params *Params) *testSystem {$/;"	f
+newWindowTestSystem	lsp2_test.go	/^func newWindowTestSystem(t *testing.T, mode windowTestMode, numClients, numMsgs int, params *Params) *windowTestSystem {$/;"	f
+packetProcessor	server_impl.go	/^func (s *server) packetProcessor() {$/;"	f
+packetReceiver	server_impl.go	/^func (s *server) packetReceiver() {$/;"	f
+randSleep	lsp1_test.go	/^func (ts *testSystem) randSleep() {$/;"	f
+readFromAllClients	lsp2_test.go	/^func (ts *windowTestSystem) readFromAllClients(totalMsgs int, checkpoints ...int) {$/;"	f
+readFromServer	lsp2_test.go	/^func (ts *windowTestSystem) readFromServer(connID int, cli Client, totalMsgs int, checkpoints ...int) {$/;"	f
+run	server_impl.go	/^func (s *server) run() {$/;"	f
+runClient	lsp1_test.go	/^func (ts *testSystem) runClient(clientID int, doneChan chan<- bool) {$/;"	f
+runClient	lsp4_test.go	/^func (ts *syncTestSystem) runClient(clienti int) {$/;"	f
+runMaxCapacityTest	lsp2_test.go	/^func (ts *windowTestSystem) runMaxCapacityTest() {$/;"	f
+runNetwork	lsp4_test.go	/^func (ts *syncTestSystem) runNetwork() {$/;"	f
+runScatteredMsgsTest	lsp2_test.go	/^func (ts *windowTestSystem) runScatteredMsgsTest() {$/;"	f
+runServer	lsp1_test.go	/^func (ts *testSystem) runServer() {$/;"	f
+runServer	lsp4_test.go	/^func (ts *syncTestSystem) runServer() {$/;"	f
+runTest	lsp1_test.go	/^func (ts *testSystem) runTest(timeout int) {$/;"	f
+runTest	lsp2_test.go	/^func (ts *windowTestSystem) runTest() {$/;"	f
+runTest	lsp3_test.go	/^func (ts *closeTestSystem) runTest() {$/;"	f
+runTest	lsp4_test.go	/^func (ts *syncTestSystem) runTest() {$/;"	f
+server	server_impl.go	/^type server struct {$/;"	t
+serverEpoch	server_impl.go	/^func (s *server) serverEpoch() {$/;"	f
+setClientWriteDropPercent	lsp2_test.go	/^func (ts *windowTestSystem) setClientWriteDropPercent(percent int) {$/;"	f
+setDescription	lsp1_test.go	/^func (ts *testSystem) setDescription(desc string) *testSystem {$/;"	f
+setDescription	lsp2_test.go	/^func (ts *windowTestSystem) setDescription(desc string) *windowTestSystem {$/;"	f
+setDescription	lsp3_test.go	/^func (ts *closeTestSystem) setDescription(t string) *closeTestSystem {$/;"	f
+setDescription	lsp4_test.go	/^func (ts *syncTestSystem) setDescription(desc string) *syncTestSystem {$/;"	f
+setDropPercent	lsp1_test.go	/^func (ts *testSystem) setDropPercent(p int) *testSystem {$/;"	f
+setMaxEpochs	lsp2_test.go	/^func (ts *windowTestSystem) setMaxEpochs(maxEpochs int) *windowTestSystem {$/;"	f
+setMaxEpochs	lsp3_test.go	/^func (ts *closeTestSystem) setMaxEpochs(maxEpochs int) *closeTestSystem {$/;"	f
+setMaxEpochs	lsp4_test.go	/^func (ts *syncTestSystem) setMaxEpochs(maxEpochs int) *syncTestSystem {$/;"	f
+setMaxSleepMillis	lsp1_test.go	/^func (ts *testSystem) setMaxSleepMillis(ms int) *testSystem {$/;"	f
+setNumClients	lsp3_test.go	/^func (ts *closeTestSystem) setNumClients(numClients int) *closeTestSystem {$/;"	f
+setNumMsgs	lsp1_test.go	/^func (ts *testSystem) setNumMsgs(n int) *testSystem {$/;"	f
+setParams	lsp3_test.go	/^func (ts *closeTestSystem) setParams(epochLimit, epochMillis, windowSize int) *closeTestSystem {$/;"	f
+setServerWriteDropPercent	lsp2_test.go	/^func (ts *windowTestSystem) setServerWriteDropPercent(percent int) {$/;"	f
+signalClients	lsp4_test.go	/^func (ts *syncTestSystem) signalClients() {$/;"	f
+signalServer	lsp4_test.go	/^func (ts *syncTestSystem) signalServer() {$/;"	f
+streamToClient	lsp2_test.go	/^func (ts *windowTestSystem) streamToClient(connID int, sendMsgs []string) {$/;"	f
+streamToServer	lsp2_test.go	/^func (ts *windowTestSystem) streamToServer(connID int, cli Client, sendMsgs []string) {$/;"	f
+syncTestMode	lsp4_test.go	/^type syncTestMode int$/;"	t
+syncTestSystem	lsp4_test.go	/^type syncTestSystem struct {$/;"	t
+testSystem	lsp1_test.go	/^type testSystem struct {$/;"	t
+toggleNetwork	lsp4_test.go	/^func (ts *syncTestSystem) toggleNetwork() {$/;"	f
+waitForClients	lsp2_test.go	/^func (ts *windowTestSystem) waitForClients() {$/;"	f
+waitForClients	lsp4_test.go	/^func (ts *syncTestSystem) waitForClients() {$/;"	f
+waitForServer	lsp2_test.go	/^func (ts *windowTestSystem) waitForServer() {$/;"	f
+waitForServer	lsp4_test.go	/^func (ts *syncTestSystem) waitForServer() {$/;"	f
+windowTestMode	lsp2_test.go	/^type windowTestMode int$/;"	t
+windowTestSystem	lsp2_test.go	/^type windowTestSystem struct {$/;"	t
+writeParam	server_impl.go	/^type writeParam struct {$/;"	t
