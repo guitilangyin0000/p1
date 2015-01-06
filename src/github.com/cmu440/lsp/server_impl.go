@@ -63,10 +63,15 @@ type server struct {
 }
 
 type writeParam struct {
-	connId  int
+	connID  int
 	payload []byte
 }
 
+type readServerResult struct {
+    connID int
+    ok     bool
+    payload    []byte
+}
 type msgWrapper struct {
 	addr *lspnet.UDPAddr
 	msg  *Message
@@ -80,7 +85,7 @@ type msgWrapper struct {
 // project 0, etc.) and immediately return. It should return a non-nil error if
 // there was an error resolving or listening on the specified port number.
 func NewServer(port int, params *Params) (server, error) {
-	s = &server{
+    s := &server{
 		port:            port,
 		conn:            nil,
 		nextConnID:      1,
@@ -117,7 +122,7 @@ func NewServer(port int, params *Params) (server, error) {
 	}
 	go s.run()
 	s.epochCountMutex <- struct{}{}
-	return s, nil
+	return *s, nil
 }
 
 func (s *server) run() {
@@ -140,7 +145,7 @@ func (s *server) run() {
 func (s *server) packetReceiver() {
 	var bytes [messageMax]byte
 	for {
-		n, addr, err := s.conn.ReadFromUDP(bytes)
+        n, addr, err := s.conn.ReadFromUDP(bytes[:])
 		if err != nil {
 			LOGE.Fatalln(err)
 		}
@@ -158,8 +163,8 @@ func (s *server) epochHandler() {
 		select {
 			case <-s.sShutdown:
 			LOGV.Println("server epoch handler is down")
-			break
-        case <-time.After(time.Duration(s.epochMillis*time.Millisecond)):
+			return
+            case <-time.After(time.Duration(s.epochMillis)*time.Millisecond):
 			s.epochSig <- struct{}{}
 
 		}
@@ -182,7 +187,7 @@ func (s *server) packetProcessor() {
 			LOGV.Println("server epoch end, the server is not closed")
 			case msgWrap := <-s.msgChan :
 				msg := msgWrap.msg
-				switch msg {
+				switch msg.Type {
 					case MsgConnect:	// handle connect request from client
 						c := s.getClient(msgWrap)
 						if c == nil {
@@ -195,6 +200,28 @@ func (s *server) packetProcessor() {
                         s.clientAlive = true
                     case MsgAck:
                         c := s.getClient(msgWrap)
+                        if c == nil {
+                            break
+                        }
+                        <-s.epochCountMutex
+                        c.epochCount = 0
+                        s.epochCountMutex <- struct{}{}
+                        c.processAck(msg)
+                        // 说明接收到的这个ack是同意断开的ack
+                        if !c.active {
+                            if c.writeList.Len() == 0 && c.sendDataNext == c.sendAckNext {
+                                LOGV.Println(c.connID, "discarded now")
+                                delete(s.clientMap, s.cIdMap[c.connID])
+                                delete(s.cIdMap, c.connID)
+                            }
+                        }
+                        if s.readPend {
+                            r := c.readFromServer()
+                            if r != nil {
+                                s.readReply <- r
+                                s.readPend = false
+                            }
+                        }
 
 					case MsgData:
 				}
@@ -212,16 +239,16 @@ func (s *server) serverEpoch() {
 	for _, id = range s.cIdMap {
 		conn := s.clientMap[id]
 		if c.closed {
-			LOGV.Println(c.connId, "is closed")
+			LOGV.Println(c.connID, "is closed")
 			continue
 		}
 		// commnet to do,sendDataNext he sendAckNext 是不是一起维护的,感觉应该是同一个
 		if !c.active && c.writeList.len() == 0 && c.sendAckNext == c.sendDataNext {
 			c.closed = true
-			LOGV.Println(c.connId, "is closed")
+			LOGV.Println(c.connID, "is closed")
 			continue
 		}
-		LOGV.Println(c.connId, "is alive")
+		LOGV.Println(c.connID, "is alive")
 		valid := true
 		c.processEpoch()
 
