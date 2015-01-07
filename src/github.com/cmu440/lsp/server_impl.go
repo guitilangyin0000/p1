@@ -3,14 +3,13 @@
 package lsp
 
 import (
-	"time"
 	"encoding/json"
-	"container/list"
 	"errors"
 	"io/ioutil"
 	"log"
 	"os"
 	"strconv"
+	"time"
 
 	"github.com/cmu440/lspnet"
 )
@@ -23,6 +22,7 @@ var (
 const (
 	messageMax = 1024
 )
+
 type server struct {
 	port        int
 	conn        *lspnet.UDPConn
@@ -51,7 +51,7 @@ type server struct {
 	closeConnRequest chan int
 	closeConnReply   chan bool
 
-	sShutdown chan struct{}  // server is down
+	sShutdown chan struct{} // server is down
 
 	readRequest chan struct{}
 	readReply   chan *readServerResult
@@ -68,15 +68,14 @@ type writeParam struct {
 }
 
 type readServerResult struct {
-    connID int
-    ok     bool
-    payload    []byte
+	connID  int
+	ok      bool
+	payload []byte
 }
 type msgWrapper struct {
 	addr *lspnet.UDPAddr
 	msg  *Message
 }
-
 
 // NewServer creates, initiates, and returns a new server. This function should
 // NOT block. Instead, it should spawn one or more goroutines (to handle things
@@ -84,8 +83,8 @@ type msgWrapper struct {
 // fixed intervals, synchronizing events using a for-select loop like you saw in
 // project 0, etc.) and immediately return. It should return a non-nil error if
 // there was an error resolving or listening on the specified port number.
-func NewServer(port int, params *Params) (server, error) {
-    s := &server{
+func NewServer(port int, params *Params) (Server, error) {
+	s := &server{
 		port:            port,
 		conn:            nil,
 		nextConnID:      1,
@@ -122,7 +121,7 @@ func NewServer(port int, params *Params) (server, error) {
 	}
 	go s.run()
 	s.epochCountMutex <- struct{}{}
-	return *s, nil
+	return s, nil
 }
 
 func (s *server) run() {
@@ -140,12 +139,13 @@ func (s *server) run() {
 }
 
 /**
-	read packets from client
+read packets from client
+作用：该函数就是从客户端接收信息，然后把信息传入s.msgChan,交给packetProcessor()来处理
 */
 func (s *server) packetReceiver() {
 	var bytes [messageMax]byte
 	for {
-        n, addr, err := s.conn.ReadFromUDP(bytes[:])
+		n, addr, err := s.conn.ReadFromUDP(bytes[:])
 		if err != nil {
 			LOGE.Fatalln(err)
 		}
@@ -155,101 +155,169 @@ func (s *server) packetReceiver() {
 	}
 }
 
-/**
-	每隔一个epochMillis，给epochSig传入一个信息
-*/
+/***
+**每隔一个epochMillis默认是2000，也就是2000 millisecond，给epochSig传入一个信息
+**用来检测每一个client是否还alive以及服务器是否还有alive的client
+ */
 func (s *server) epochHandler() {
 	for {
 		select {
-			case <-s.sShutdown:
+		case <-s.sShutdown:
 			LOGV.Println("server epoch handler is down")
 			return
-            case <-time.After(time.Duration(s.epochMillis)*time.Millisecond):
+		case <-time.After(time.Duration(s.epochMillis) * time.Millisecond):
 			s.epochSig <- struct{}{}
-
 		}
 	}
 
 }
 
+/**
+**用来作数据处理以及信息处理
+*/
 func (s *server) packetProcessor() {
 	for {
 		select {
-			case <-s.epochSig :
+		case <-s.epochSig: // 每进来一个信号，检测一次
 			LOGV.Println("server epoch start") // server only need to confirm if the client is closed
 			s.serverEpoch()
 			if s.closePend && !s.clientAlive { // server is close pend and 没有一个client alive
 				LOGV.Println("server close after epoch handler")
-				close(s.sShutdown)    // sShutdown is a channel, close means sShutdown can't read or write data
-				s.closeReply <-true
+				close(s.sShutdown) // sShutdown is a channel, close means sShutdown can't read or write data
+				s.closeReply <- true
 				return
 			}
 			LOGV.Println("server epoch end, the server is not closed")
-			case msgWrap := <-s.msgChan :
-				msg := msgWrap.msg
-				switch msg.Type {
-					case MsgConnect:	// handle connect request from client
-						c := s.getClient(msgWrap)
-						if c == nil {
-							c :=s.createClient(msgWrap)
-						}
-						<-s.epochCountMutex // 不懂
-                        c.epochCount = 0
-                        s.epochCountMutex <-struct{}{}
-                        c.processConn(msg)
-                        s.clientAlive = true
-                    case MsgAck:
-                        c := s.getClient(msgWrap)
-                        if c == nil {
-                            break
-                        }
-                        <-s.epochCountMutex
-                        c.epochCount = 0
-                        s.epochCountMutex <- struct{}{}
-                        c.processAck(msg)
-                        // 说明接收到的这个ack是同意断开的ack
-                        if !c.active {
-                            if c.writeList.Len() == 0 && c.sendDataNext == c.sendAckNext {
-                                LOGV.Println(c.connID, "discarded now")
-                                delete(s.clientMap, s.cIdMap[c.connID])
-                                delete(s.cIdMap, c.connID)
-                            }
-                        }
-                        if s.readPend {
-                            r := c.readFromServer()
-                            if r != nil {
-                                s.readReply <- r
-                                s.readPend = false
-                            }
-                        }
-
-					case MsgData:
+		case msgWrap := <-s.msgChan:
+			msg := msgWrap.msg
+			switch msg.Type {
+			case MsgConnect: // handle connect request from client
+				c := s.getClient(msgWrap)
+				if c == nil {
+					c = s.createClient(msgWrap)
 				}
-			case <-s.readRequest:
+				<-s.epochCountMutex // 不懂
+				c.epochCount = 0
+				s.epochCountMutex <- struct{}{}
+				c.processConn(msg)
+				s.clientAlive = true
+			case MsgAck:
+				c := s.getClient(msgWrap)
+				if c == nil {
+					break
+				}
+				<-s.epochCountMutex
+				c.epochCount = 0
+				s.epochCountMutex <- struct{}{}
+				c.processAck(msg)
+				// 说明接收到的这个ack是同意断开的ack
+				if !c.active {
+					if c.writeList.Len() == 0 && c.sendDataNext == c.sendAckNext {
+						LOGV.Println(c.connID, "discarded now")
+						delete(s.clientMap, s.cIdMap[c.connID])
+						delete(s.cIdMap, c.connID)
+					}
+				}
+				if s.readPend {
+					r := c.readFromServer()
+					if r != nil {
+						s.readReply <- r
+						s.readPend = false
+					}
+				}
 
+			case MsgData:
+				c := s.getClient(msgWrap)
+				if c == nil {
+					c = s.createClient(msgWrap)
+				}
+				<-s.epochCountMutex // 不懂
+				s.epochCountMutex <- struct{}{}
+				c.epochCount = 0
+				LOGV.Println(c.connID, "receive data")
+				c.processData(msg)
+                // check Read() block,如果有因为调用Read()被阻塞，则读一个数据
+                // 其实就是Server 不断的读，有可能读的比较快，把缓存里面的读完了
+                // 现在处于readPend状态
+				if s.readPend {
+					r := c.readFromServer()
+					if r != nil {
+						s.readReply <- r
+						s.readPend = false
+					}
+				}
+			}
+		case <-s.readRequest:    // 有读数据请求，也就是调用了Read()
+			s.readPend = true
+			for _, c := range s.clientMap {
+				r := c.readFromServer()
+				if r != nil {
+					LOGV.Println("read something")
+					s.readReply <- r
+					s.readPend = false
+					break
+				}
+			}
+        case req := <-s.writeRequest:
+            LOGV.Println("Write case start")
+            c, err := s.getClientByID(req.connID)
+            if !c.active || err != nil {
+                LOGV.Println("server write error");
+                s.writeReply<-false
+            } else {
+                c.writeList.PushBack(req.payload)
+                c.processWrite()
+                s.writeReply<-true
+            }
+            LOGV.Println("Write case end");
+        case connID := <-s.closeConnRequest:
+            c, e := s.getClientByID(connID)
+            if c == nil || e != nil {
+                s.closeConnReply<-false
+            }
+            if c.active == false {
+                s.closeConnReply<-false
+            }
+            c.active = false
+            c.readList.Init()
+            s.closeConnReply<-true
+        case <- s.closeRequest:
+            s.closePend = true
+            if !s.clientAlive {
+                LOGV.Println("Close after close")
+                close(s.sShutdown)
+                s.closeReply <- false
+                return
+            } else {
+                for _, c := range s.clientMap {
+                    LOGV.Println("server make ", c.connID, " closed")
+                    c.active = false
+                }
+                s.closeReply <-true
+            }
 		}
 	}
 }
 
 /**
-	serverEpoch 用来检测client是否有关闭的
-*/
+**作用:遍历client，看是否有断开连接的
+ */
 func (s *server) serverEpoch() {
 	valid := false // if valid is false, it means server has no one client
-	for _, id = range s.cIdMap {
-		conn := s.clientMap[id]
+	for _, id := range s.cIdMap {
+		c := s.clientMap[id]
 		if c.closed {
 			LOGV.Println(c.connID, "is closed")
 			continue
 		}
 		// commnet to do,sendDataNext he sendAckNext 是不是一起维护的,感觉应该是同一个
-		if !c.active && c.writeList.len() == 0 && c.sendAckNext == c.sendDataNext {
+		if !c.active && c.writeList.Len() == 0 && c.sendAckNext == c.sendDataNext {
 			c.closed = true
 			LOGV.Println(c.connID, "is closed")
 			continue
 		}
 		LOGV.Println(c.connID, "is alive")
-		valid := true
+		valid = true
 		c.processEpoch()
 
 		// 这里就不太明白了
@@ -270,21 +338,91 @@ func (s *server) serverEpoch() {
 	}
 }
 
-func (s *server) Read() (int, []byte, error) {
-	// TODO: remove this line when you are ready to begin implementing this method.
-	select {} // Blocks indefinitely.
-	return -1, nil, errors.New("not yet implemented")
+func (s *server) createClient(msgWrap *msgWrapper) *clientLit {
+	addr := msgWrap.addr
+	_, ok := s.clientMap[addr.String()]
+	if !ok {
+		cLit := newClientLit(s.nextConnID, s.windowSize, s.epochLimit, s.epochMillis, s.conn)
+        cLit.addr = addr
+        s.clientMap[addr.String()] = cLit
+        s.cIdMap[s.nextConnID] = addr.String()
+        s.nextConnID++;
+        cLit.active = true
+	}
+	client := s.clientMap[addr.String()]
+	return client
+}
+
+func (s *server) getClientByID(connID int) (*clientLit, error) {
+    cli, ok := s.clientMap[s.cIdMap[connID]]
+    if !ok {
+        return nil, errors.New("can not find client")
+    }
+    return cli, nil
+}
+
+func (s *server) getClient(msgWrap *msgWrapper) *clientLit {
+	addr := msgWrap.addr
+	client, ok := s.clientMap[addr.String()]
+	if !ok {
+		return nil
+	}
+	return client
+}
+
+func (s *server) Read() (n int, payload []byte, e error) {
+    LOGV.Println("read called")
+    defer LOGV.Println("read end")
+    s.readRequest <- struct{}{}
+    result := <-s.readReply
+    LOGV.Println("Read() get result")
+    if !result.ok {
+        e = errors.New("server Read(): a connection lost")
+        n = result.connID
+    } else {
+        n = result.connID
+        payload = result.payload
+    }
+    return
 }
 
 func (s *server) Write(connID int, payload []byte) error {
-	return errors.New("not yet implemented")
+    LOGV.Println("server write to ", connID)
+    defer LOGV.Println("server write to ", connID, " done")
+    s.writeRequest <- &writeParam{connID, payload}
+    ok := <-s.writeReply
+    if !ok {
+        e := errors.New("Server: lost connection")
+        return e
+    }
+    return nil
 }
 
+/**
+** close client by connID
+*/
 func (s *server) CloseConn(connID int) error {
-	return errors.New("not yet implemented")
-}
+    LOGV.Println("CloseConn called")
+    defer LOGV.Println("CloseConn end")
+    s.closeConnRequest<-connID
+    ok := <-s.closeConnReply
+    if !ok {
+        e := errors.New("connection:" + strconv.Itoa(connID) + " has already been closed")
+        return e
+    }
+    return nil
+    }
 
-func (s *server) Close() error {
-	return errors.New("not yet implemented")
+/**
+** close server
+*/
+func (s *server) Close() (e error) {
+    LOGV.Println("Server Colse() called")
+    defer LOGV.Println("server close() end")
+    s.closeRequest <- struct{}{}
+    ok := <-s.closeReply
+    if !ok {
+        e = errors.New("server has already been closed")
+    }
+    return
 }
-
