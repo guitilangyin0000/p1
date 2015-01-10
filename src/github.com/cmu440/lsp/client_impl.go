@@ -2,10 +2,51 @@
 
 package lsp
 
-import "errors"
+import (
+    "container/list"
+    "encoding/json"
+    "errors"
+    "github.com/cmu440/lspnet"
+    "io/ioutil"
+    "log"
+    "os"
+    "time"
+)
 
 type client struct {
-	// TODO: implement this!
+	connID int
+    hostport string
+    conn *lspnet.UDPConn
+    active bool
+    readPend    bool
+    allClean    bool
+    closePend    bool
+
+    epochLimit  int
+    epochMillis int
+    windowSize  int
+    epochCount  int
+
+    epochCountMutex chan struct{}
+
+    // send
+    sendAckNext int                 // first send packet not acknowledged
+    sendDataNext int                // next sequence number to be sent
+    sendDataCache   map[int]*Message    // cached for sent packets
+    sendAckCache    map[int]bool    // 表示send数据之后收到ack的缓存，也就是若收到后则设置为true
+
+    // receive
+    receiveDataNext int
+    receiveRecent   *list.List
+    receiveDataCache    map[int]*Message
+
+    // channel
+    connChan chan int               // notify connection
+    msgChan chan *Message           // transfer message to processor
+    epochSig chan struct{}          // notify epoch event
+    shutdown chan struct{}          // notify the components of current client
+
+
 }
 
 // NewClient creates, initiates, and returns a new client. This function
