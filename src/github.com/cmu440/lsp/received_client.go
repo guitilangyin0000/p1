@@ -22,8 +22,7 @@ type clientLit struct {
 	epochCountMutex chan struct{}
 
 	addr         *lspnet.UDPAddr
-	sendAckNext  int  //第一次收到connect会加1,表示发送的data之后接收到的ack,sendAckNext表示
-    // 下一个预期接收到的ack号，其实就相当于现在还没有接受到ack最小发送data序列号
+	sendAckNext  int  // sendAckNext表示下一个预期接收到的ack号，其实就相当于现在还没有接受到ack最小发送data序列号，例如连接后server先发{data，id, 2, payload}，然后client回复{ack，id, 2}（这个2是从接收到的信息读到的），然后server的接收到的号(2)如果正好等于server.sendAckNext时，sendAckNext++
 	sendDataNext int  // 每发送一次data加1
 	closeChan    chan int
 
@@ -52,7 +51,7 @@ func newClientLit(connID int, wSize int, eLimit int, eMillis int, conn *lspnet.U
         conn:         conn,
         epochLimit:   eLimit,
         epochMillis:  eMillis,
-        sendAckNext:  0,    // sendAckNext 表示server发送的数据并且被回复ack的最小序列号
+        sendAckNext:  0,    // sendAckNext 表示server发送的数据并且没被回复ack的最小序列号
         sendDataNext: 1,    // sendDataNext 表示下一个要发送的数据的序列号
         addr:         nil,
         closeChan:    make(chan int),
@@ -74,6 +73,7 @@ func newClientLit(connID int, wSize int, eLimit int, eMillis int, conn *lspnet.U
     return &cli
 }
 func (c *clientLit) sendAck(sn int) {
+    LOGV.Printf("%d send ack to client\n", c.connID)
     ack := NewAck(c.connID, sn)
     write(c.conn, &msgWrapper{c.addr, ack})
 }
@@ -83,7 +83,12 @@ func write(conn *lspnet.UDPConn, m *msgWrapper) {
         LOGE.Println(err)
     }
 
-    conn.WriteToUDP(msg, m.addr)
+    n, err := conn.WriteToUDP(msg, m.addr)
+    if err != nil {
+        LOGV.Printf("clientLit %d write %d bytes to client\n", m.msg.ConnID, n)
+        LOGE.Fatalln("clientLit write error")
+    }
+    LOGV.Printf("clientLit %d write %d bytes %s to client\n", m.msg.ConnID, n, msg)
 }
 /**
 ** process new connection
@@ -245,6 +250,7 @@ func (c *clientLit) processWrite() {
             msg := NewData(c.connID, c.sendDataNext, payload)
             c.sendDataCache[c.sendDataNext] = msg
             write(c.conn, &msgWrapper{c.addr, msg})
+            c.sendDataNext++
             c.writeList.Remove(c.writeList.Front())
         } else {
             return

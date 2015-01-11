@@ -5,7 +5,6 @@ package lsp
 import (
 	"encoding/json"
 	"errors"
-	"io/ioutil"
 	"log"
 	"os"
 	"strconv"
@@ -16,7 +15,7 @@ import (
 
 var (
 	LOGE = log.New(os.Stderr, "Error ", log.Lmicroseconds|log.Lshortfile)
-	LOGV = log.New(ioutil.Discard, "VERBOSE ", log.Lmicroseconds|log.Lshortfile)
+	LOGV = log.New(os.Stdout, "VERBOSE ", log.Lmicroseconds|log.Lshortfile)
 )
 
 const (
@@ -190,6 +189,7 @@ func (s *server) packetProcessor() {
 			LOGV.Println("server epoch end, the server is not closed")
 		case msgWrap := <-s.msgChan:
 			msg := msgWrap.msg
+            LOGV.Printf("\nreceive data: %s\n", msg.String())
 			switch msg.Type {
 			case MsgConnect: // handle connect request from client
 				c := s.getClient(msgWrap)
@@ -231,10 +231,9 @@ func (s *server) packetProcessor() {
 				if c == nil {
 					c = s.createClient(msgWrap)
 				}
-				<-s.epochCountMutex // 不懂
-				s.epochCountMutex <- struct{}{}
+				<-s.epochCountMutex // 类似于锁
+                s.epochCountMutex <- struct{}{}
 				c.epochCount = 0
-				LOGV.Println(c.connID, "receive data")
 				c.processData(msg)
                 // check Read() block,如果有因为调用Read()被阻塞，则读一个数据
                 // 其实就是Server 不断的读，有可能读的比较快，把缓存里面的读完了
@@ -269,7 +268,6 @@ func (s *server) packetProcessor() {
                 c.processWrite()
                 s.writeReply<-true
             }
-            LOGV.Println("Write case end");
         case connID := <-s.closeConnRequest:
             c, e := s.getClientByID(connID)
             if c == nil || e != nil {
@@ -310,7 +308,8 @@ func (s *server) serverEpoch() {
 			LOGV.Println(c.connID, "is closed")
 			continue
 		}
-		// commnet to do,sendDataNext he sendAckNext 是不是一起维护的,感觉应该是同一个
+		// 意思是最后发送的数据没有收到ack的号和还没发送的数据号相同，表示所有发送
+        // 的数据都接收到了ack,并且现在要发送数据的缓存为空,无数据可发
 		if !c.active && c.writeList.Len() == 0 && c.sendAckNext == c.sendDataNext {
 			c.closed = true
 			LOGV.Println(c.connID, "is closed")
@@ -320,7 +319,7 @@ func (s *server) serverEpoch() {
 		valid = true
 		c.processEpoch()
 
-		// 这里就不太明白了
+		// 如果此时处于调用了Read()的状态，则读数据
 		if s.readPend {
 			r := c.readFromServer()
 			if r != nil {

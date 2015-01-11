@@ -4,13 +4,8 @@ package lsp
 
 import (
     "container/list"
-    "encoding/json"
     "errors"
     "github.com/cmu440/lspnet"
-    "io/ioutil"
-    "log"
-    "os"
-    "time"
 )
 
 type client struct {
