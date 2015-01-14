@@ -168,7 +168,6 @@ func (s *server) epochHandler() {
 			s.epochSig <- struct{}{}
 		}
 	}
-
 }
 
 /**
@@ -210,9 +209,8 @@ func (s *server) packetProcessor() {
 				c.epochCount = 0
 				s.epochCountMutex <- struct{}{}
 				c.processAck(msg)
-				// 说明接收到的这个ack是同意断开的ack
 				if !c.active {
-					if c.writeList.Len() == 0 && c.sendDataNext == c.sendAckNext {
+					if c.writeList.Len() == 0 && c.sendDataNext == c.sendDataNotAckEarliest {
 						LOGV.Println(c.connID, "discarded now")
 						delete(s.clientMap, s.cIdMap[c.connID])
 						delete(s.cIdMap, c.connID)
@@ -310,7 +308,7 @@ func (s *server) serverEpoch() {
 		}
 		// 意思是最后发送的数据没有收到ack的号和还没发送的数据号相同，表示所有发送
         // 的数据都接收到了ack,并且现在要发送数据的缓存为空,无数据可发
-		if !c.active && c.writeList.Len() == 0 && c.sendAckNext == c.sendDataNext {
+		if !c.active && c.writeList.Len() == 0 && c.sendDataNotAckEarliest == c.sendDataNext {
 			c.closed = true
 			LOGV.Println(c.connID, "is closed")
 			continue
@@ -413,7 +411,8 @@ func (s *server) CloseConn(connID int) error {
     }
 
 /**
-** close server
+** close server,感觉没有符合要求，要求是Close()应该等待所有的信息都已经发送并且被acked
+** 或者连接断掉，把信息丢弃
 */
 func (s *server) Close() (e error) {
     LOGV.Println("Server Colse() called")

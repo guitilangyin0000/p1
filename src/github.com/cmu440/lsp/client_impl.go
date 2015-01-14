@@ -28,10 +28,10 @@ type client struct {
     epochCountMutex chan struct{}
 
     // send
-    sendAckNext int                 // first send packet not acknowledged
+    sendDataNotAckEarliest int                 // first send packet not acknowledged
     sendDataNext int                // next sequence number to be sent
     sendDataCache   map[int]*Message    // cached for sent packets
-    sendAckCache    map[int]bool    // 表示send数据之后收到ack的缓存，也就是若收到后则设置为true
+    sendDataAckCache    map[int]bool    // 表示send数据之后收到ack的缓存，也就是若收到后则设置为true
 
     // receive
     receiveDataNext int
@@ -99,8 +99,8 @@ func NewClient(hostport string, params *Params) (Client, error) {
     cli.receiveDataCache = make(map[int]*Message)
     cli.receiveDataNext = 1
     cli.receiveRecent = list.New()
-    cli.sendAckCache = make(map[int]bool)
-    cli.sendAckNext = 0 // connect 收到ack之后加1
+    cli.sendDataAckCache = make(map[int]bool)
+    cli.sendDataNotAckEarliest = 0 // connect 收到ack之后加1, 为0表示最开始发送的数据为connect为0，收到的ack是0
     cli.sendDataCache = make(map[int]*Message)
     cli.sendDataNext = 1
     cli.shutdown = make(chan struct{})
@@ -214,7 +214,6 @@ func (c *client) processPacket() {
             if !c.active && c.allClean {
                 c.closeReply<-false
             }
-            c.active = false
             c.closePend = true
             if c.allClean {
                 close(c.shutdown)
@@ -264,31 +263,107 @@ func (c *client) epochHandler() {
     }
 }
 
+func (c *client) processEpoch() {
+    if c.sendDataNotAckEarliest == 0 { // 说明连接没成功
+        connect := NewConnect()
+        clientWrite(c.conn, connect)
+    }
+
+    for sn := c.sendDataNotAckEarliest; sn < c.sendDataNotAckEarliest + c.windowSize; sn++ {
+        msg, ok := c.sendDataCache[sn]
+        if ok {
+            // resend data
+            clientWrite(c.conn, msg)
+        }
+    }
+
+    s := ""
+    for curr := c.receiveRecent.Front(); curr != nil; curr = curr.Next() {
+        s += " " + curr.Value.(*Message).String()
+    }
+    LOGV.Println(c.connid, " client recent : " + s)
+
+    for curr := c.receiveRecent.Front(); curr != nil; curr = curr.Next() {
+        // resend ack
+        ack := NewAck(curr.Value.(*Message).ConnID, curr.Value.(*Message).SeqNum)
+        clientWrite(c.conn, ack)
+    }
+    // 不太懂
+    c.processWrite()
+}
 /**
 ** when new ack arrived
 */
 func (c *client) processAck(msg *Message) {
-    if msg.SeqNum == c.sendAckNext {
+    if msg.SeqNum == c.sendDataNotAckEarliest {
         if msg.SeqNum == 0 { // client send connect has been acked，只有connect返回的ack的SeqNum = 0
             c.connid = msg.ConnID
             c.connChan <- 1
             LOGV.Println("connection confirmed")
         }
         LOGV.Println(msg.ConnID, " get ", msg)
-        delete(c.sendAckCache, c.sendAckNext)  // delete一个不存在的key值不会出错
-        delete(c.sendDataCache, c.sendAckNext)
-        c.sendAckNext++
-        _, ok := c.sendAckCache[c.sendAckNext]
+        delete(c.sendDataAckCache, c.sendDataNotAckEarliest)  // delete一个不存在的key值不会出错
+        delete(c.sendDataCache, c.sendDataNotAckEarliest)
+        c.sendDataNotAckEarliest++
+        _, ok := c.sendDataAckCache[c.sendDataNotAckEarliest]
         for ok {
-            delete(c.sendAckCache, c.sendAckNext)
-            delete(c.sendDataCache, c.sendAckNext)
-            c.sendAckNext++
-            _, ok := c.sendAckCache[c.sendAckNext]
+            delete(c.sendDataAckCache, c.sendDataNotAckEarliest)
+            delete(c.sendDataAckCache, c.sendDataNotAckEarliest)
+            c.sendDataNotAckEarliest++
+            _, ok = c.sendDataAckCache[c.sendDataNotAckEarliest]
         }
         c.processWrite()
-    } else if msg.SeqNum > c.sendAckNext {
-        c.sendAckCache[msg.SeqNum] = true
-        delete(c.sendDataCache, msg.SeqNum)
+    } else if msg.SeqNum > c.sendDataNotAckEarliest {
+        c.sendDataAckCache[msg.SeqNum] = true
+        delete(c.sendDataAckCache, msg.SeqNum)
+    }
+}
+
+/**
+** call Write()
+*/
+func (c *client) processWrite() {
+    // 把所有writeList里面的数据都传出去
+    for c.sendDataNext < c.sendDataNotAckEarliest + c.windowSize {
+        if c.writeList.Len() > 0 {
+            payload := c.writeList.Front().Value.([]byte)
+            msg := NewData(c.connid, c.sendDataNext, payload)
+            c.sendDataCache[c.sendDataNext] = msg
+            clientWrite(c.conn, msg)
+            c.sendDataNext++
+            c.writeList.Remove(c.writeList.Front())
+        } else {    // 说明没数据了
+            if !c.active && c.writeList.Len() == 0 && c.sendDataNext == c.sendDataNotAckEarliest {
+                LOGV.Println(c.connid, " clean at ", c.sendDataNext)
+                c.allClean = true
+            }
+            return
+        }
+    }
+
+    if !c.active && c.writeList.Len() == 0 && c.sendDataNotAckEarliest == c.sendDataNext {
+        LOGV.Println(c.connid, " clean at ", c.sendDataNext)
+        c.allClean = true
+    }
+    return
+}
+
+/**
+** call Read()
+*/
+func (c *client) processRead() {
+    if c.readPend {
+        if !c.active {
+            LOGV.Println(c.connid, "is dead")
+            c.readReply<-readResult{false, nil}
+        } else if c.readList.Len() > 0 {
+            bytes := c.readList.Front().Value.([]byte)
+            c.readList.Remove(c.readList.Front())
+            c.readReply<-readResult{true, bytes}
+            c.readPend = false
+        } else {
+            LOGV.Println("Read list is empty")
+        }
     }
 }
 
@@ -306,9 +381,9 @@ func (c *client) processData(msg *Message) {
                 ack := NewAck(c.connid, c.receiveDataNext)
                 clientWrite(c.conn, ack)
                 c.receiveDataNext++
-                _, ok := c.receiveDataCache[c.receiveDataNext]
+                _, ok = c.receiveDataCache[c.receiveDataNext]
             }
-        } else {
+        } else {  // 感觉窗口好像没发挥作用，这里凡是大于期待接收的data序列号都会缓存起来，并不会因为窗口而丢弃
             c.receiveDataCache[msg.SeqNum] = msg
             ack := NewAck(c.connid, msg.SeqNum)
             clientWrite(c.conn, ack)
@@ -350,16 +425,34 @@ func (c *client) ConnID() int {
 	return c.connid
 }
 
-func (c *client) Read() ([]byte, error) {
-	// TODO: remove this line when you are ready to begin implementing this method.
-	select {} // Blocks indefinitely.
-	return nil, errors.New("not yet implemented")
+func (c *client) Read() (d []byte, e error) {
+    c.readRequest<-struct{}{}
+    r := <-c.readReply
+    if !r.succ {
+        e = errors.New("read wrong")
+        return
+    }
+    d = r.data
+	return
 }
 
-func (c *client) Write(payload []byte) error {
-	return errors.New("not yet implemented")
+func (c *client) Write(payload []byte) (e error) {
+	c.writeRequest <-payload
+    r := <-c.writeReply
+    if !r {
+        e = errors.New("Write: connection to server died")
+    }
+    return
 }
 
-func (c *client) Close() error {
-	return errors.New("not yet implemented")
+func (c *client) Close() (e error) {
+    LOGV.Println(c.connid, " Close() called")
+    defer LOGV.Println(c.connid, "Close() end")
+    c.closeRequest <- struct{}{}
+    r := <-c.closeReply
+    if !r {
+        e = errors.New("Client: has been closed")
+        return
+    }
+    return errors.New("closed success")
 }

@@ -22,7 +22,7 @@ type clientLit struct {
 	epochCountMutex chan struct{}
 
 	addr         *lspnet.UDPAddr
-	sendAckNext  int  // sendAckNext表示下一个预期接收到的ack号，其实就相当于现在还没有接受到ack最小发送data序列号，例如连接后server先发{data，id, 2, payload}，然后client回复{ack，id, 2}（这个2是从接收到的信息读到的），然后server的接收到的号(2)如果正好等于server.sendAckNext时，sendAckNext++
+	sendDataNotAckEarliest  int  // sendAckNext表示下一个预期接收到的ack号，其实就相当于现在还没有接受到ack最小发送data序列号，例如连接后server先发{data，id, 2, payload}，然后client回复{ack，id, 2}（这个2是从接收到的信息读到的），然后server的接收到的号(2)如果正好等于server.sendAckNext时，sendAckNext++
 	sendDataNext int  // 每发送一次data加1
 	closeChan    chan int
 
@@ -51,7 +51,7 @@ func newClientLit(connID int, wSize int, eLimit int, eMillis int, conn *lspnet.U
         conn:         conn,
         epochLimit:   eLimit,
         epochMillis:  eMillis,
-        sendAckNext:  0,    // sendAckNext 表示server发送的数据并且没被回复ack的最小序列号
+        sendDataNotAckEarliest:  0,    // sendAckNext 表示server发送的数据并且没被回复ack的最小序列号
         sendDataNext: 1,    // sendDataNext 表示下一个要发送的数据的序列号
         addr:         nil,
         closeChan:    make(chan int),
@@ -94,9 +94,9 @@ func write(conn *lspnet.UDPConn, m *msgWrapper) {
 ** process new connection
  */
 func (c *clientLit) processConn(msg *Message) {
-    if c.sendAckNext == 0 {   // 因为初始化是0，所以等于0表示是连接的请求
+    if c.sendDataNotAckEarliest == 0 {   // 因为初始化是0，所以等于0表示是连接的请求
         ack := NewAck(c.connID, 0)
-        c.sendAckNext++
+        c.sendDataNotAckEarliest++
         write(c.conn, &msgWrapper{c.addr, ack})
     } else {
         LOGV.Println("conn has already connected, drop for ", c.connID)
@@ -108,19 +108,19 @@ func (c *clientLit) processConn(msg *Message) {
 */
 func (c *clientLit) processAck(msg *Message) {
     switch {
-    case msg.SeqNum == c.sendAckNext:    // 如果client回复的ack的序列号是希望接收到的ack号,则删除最近发送数据的那个号
-        delete(c.sendAckCache, c.sendAckNext)
-        delete(c.sendDataCache, c.sendAckNext)
-        c.sendAckNext++
-        _, ok := c.sendAckCache[c.sendAckNext]
+    case msg.SeqNum == c.sendDataNotAckEarliest:    // 如果client回复的ack的序列号是希望接收到的ack号,则删除最近发送数据的那个号
+        delete(c.sendAckCache, c.sendDataNotAckEarliest)
+        delete(c.sendDataCache, c.sendDataNotAckEarliest)
+        c.sendDataNotAckEarliest++
+        _, ok := c.sendAckCache[c.sendDataNotAckEarliest]
         for ok {
-            delete(c.sendAckCache, c.sendAckNext)
-            delete(c.sendDataCache, c.sendAckNext)
-            c.sendAckNext++
-            _, ok = c.sendAckCache[c.sendAckNext]
+            delete(c.sendAckCache, c.sendDataNotAckEarliest)
+            delete(c.sendDataCache, c.sendDataNotAckEarliest)
+            c.sendDataNotAckEarliest++
+            _, ok = c.sendAckCache[c.sendDataNotAckEarliest]
         }
         c.processWrite()
-    case msg.SeqNum > c.sendAckNext:    // 如果client回复的ack的序列号大于希望接收的ack号，则把缓存接收的ack设为true
+    case msg.SeqNum > c.sendDataNotAckEarliest:    // 如果client回复的ack的序列号大于希望接收的ack号，则把缓存接收的ack设为true
     // 并且把可能重发的数据删除
         c.sendAckCache[msg.SeqNum] = true
         delete(c.sendDataCache, msg.SeqNum)
@@ -184,7 +184,7 @@ func (c *clientLit) processData(msg *Message) {
 func (c *clientLit) processEpoch() {
     // 因为server需要发送的只有ack 和data, data 是主动发送
     // for sending, resend unacked data    c.sendAckNext 表示server发送的数据并且没被回复ack的最小号
-    for sn := c.sendAckNext; sn < c.sendAckNext + c.windowSize; sn++ {
+    for sn := c.sendDataNotAckEarliest; sn < c.sendDataNotAckEarliest + c.windowSize; sn++ {
         msg, ok := c.sendDataCache[sn]
         if ok {
             LOGV.Println("Resend", msg)
@@ -244,7 +244,7 @@ func (c *clientLit) readFromServer() *readServerResult {
 }
 
 func (c *clientLit) processWrite() {
-    for c.sendDataNext < c.sendAckNext + c.windowSize {
+    for c.sendDataNext < c.sendDataNotAckEarliest + c.windowSize {
         if c.writeList.Len() > 0 {
             payload := c.writeList.Front().Value.([]byte)
             msg := NewData(c.connID, c.sendDataNext, payload)

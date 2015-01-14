@@ -1,0 +1,275 @@
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_PROGRAM_AUTHOR	Darren Hiebert	/dhiebert@users.sourceforge.net/
+!_TAG_PROGRAM_NAME	Exuberant Ctags	//
+!_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
+!_TAG_PROGRAM_VERSION	5.9~svn20110310	//
+Client	lsp/client_api.go	/^type Client interface {$/;"	t
+Close	lsp/client_impl.go	/^func (c *client) Close() (e error) {$/;"	f
+Close	lsp/server_impl.go	/^func (s *server) Close() (e error) {$/;"	f
+Close	lspnet/conn.go	/^func (c *UDPConn) Close() error {$/;"	f
+CloseConn	lsp/server_impl.go	/^func (s *server) CloseConn(connID int) error {$/;"	f
+ConnID	lsp/client_impl.go	/^func (c *client) ConnID() int {$/;"	f
+DefaultEpochLimit	lsp/params.go	/^	DefaultEpochLimit  = 5$/;"	c
+DefaultEpochMillis	lsp/params.go	/^	DefaultEpochMillis = 2000$/;"	c
+DefaultWindowSize	lsp/params.go	/^	DefaultWindowSize  = 1$/;"	c
+DialUDP	lspnet/net.go	/^func DialUDP(ntwk string, laddr, raddr *UDPAddr) (*UDPConn, error) {$/;"	f
+EnableDebugLogs	lspnet/conn.go	/^func EnableDebugLogs(enable bool) {$/;"	f
+Hash	bitcoin/hash.go	/^func Hash(msg string, nonce uint64) uint64 {$/;"	f
+Join	bitcoin/message.go	/^	Join MsgType = iota$/;"	c
+JoinHostPort	lspnet/net.go	/^func JoinHostPort(host, port string) string {$/;"	f
+LOGE	lsp/server_impl.go	/^	LOGE = log.New(os.Stderr, "Error ", log.Lmicroseconds|log.Lshortfile)$/;"	v
+LOGV	lsp/server_impl.go	/^	LOGV = log.New(os.Stdout, "VERBOSE ", log.Lmicroseconds|log.Lshortfile)$/;"	v
+ListenUDP	lspnet/net.go	/^func ListenUDP(ntwk string, laddr *UDPAddr) (*UDPConn, error) {$/;"	f
+Message	bitcoin/message.go	/^type Message struct {$/;"	t
+Message	lsp/message.go	/^type Message struct {$/;"	t
+MsgAck	lsp/message.go	/^	MsgAck                    \/\/ Sent by clients\/servers to ack connect\/data msgs.$/;"	c
+MsgConnect	lsp/message.go	/^	MsgConnect MsgType = iota \/\/ Sent by clients to make a connection w\/ the server.$/;"	c
+MsgData	lsp/message.go	/^	MsgData                   \/\/ Sent by clients\/servers to send data.$/;"	c
+MsgType	bitcoin/message.go	/^type MsgType int$/;"	t
+MsgType	lsp/message.go	/^type MsgType int$/;"	t
+NewAck	lsp/message.go	/^func NewAck(connID, seqNum int) *Message {$/;"	f
+NewClient	lsp/client_impl.go	/^func NewClient(hostport string, params *Params) (Client, error) {$/;"	f
+NewConnect	lsp/message.go	/^func NewConnect() *Message {$/;"	f
+NewData	lsp/message.go	/^func NewData(connID, seqNum int, payload []byte) *Message {$/;"	f
+NewJoin	bitcoin/message.go	/^func NewJoin() *Message {$/;"	f
+NewParams	lsp/params.go	/^func NewParams() *Params {$/;"	f
+NewRequest	bitcoin/message.go	/^func NewRequest(data string, lower, upper uint64) *Message {$/;"	f
+NewResult	bitcoin/message.go	/^func NewResult(hash, nonce uint64) *Message {$/;"	f
+NewServer	lsp/server_impl.go	/^func NewServer(port int, params *Params) (Server, error) {$/;"	f
+Params	lsp/params.go	/^type Params struct {$/;"	t
+Read	lsp/client_impl.go	/^func (c *client) Read() (d []byte, e error) {$/;"	f
+Read	lsp/server_impl.go	/^func (s *server) Read() (n int, payload []byte, e error) {$/;"	f
+Read	lspnet/conn.go	/^func (c *UDPConn) Read(b []byte) (n int, err error) {$/;"	f
+ReadFromUDP	lspnet/conn.go	/^func (c *UDPConn) ReadFromUDP(b []byte) (n int, addr *UDPAddr, err error) {$/;"	f
+Request	bitcoin/message.go	/^	Request$/;"	c
+ResetDropPercent	lspnet/staff.go	/^func ResetDropPercent() {$/;"	f
+ResolveUDPAddr	lspnet/net.go	/^func ResolveUDPAddr(ntwk, addr string) (*UDPAddr, error) {$/;"	f
+Result	bitcoin/message.go	/^	Result$/;"	c
+Server	lsp/server_api.go	/^type Server interface {$/;"	t
+SetClientReadDropPercent	lspnet/staff.go	/^func SetClientReadDropPercent(p int) {$/;"	f
+SetClientWriteDropPercent	lspnet/staff.go	/^func SetClientWriteDropPercent(p int) {$/;"	f
+SetReadDropPercent	lspnet/staff.go	/^func SetReadDropPercent(p int) {$/;"	f
+SetServerReadDropPercent	lspnet/staff.go	/^func SetServerReadDropPercent(p int) {$/;"	f
+SetServerWriteDropPercent	lspnet/staff.go	/^func SetServerWriteDropPercent(p int) {$/;"	f
+SetWriteDropPercent	lspnet/staff.go	/^func SetWriteDropPercent(p int) {$/;"	f
+SplitHostPort	lspnet/net.go	/^func SplitHostPort(hostport string) (host, port string, err error) {$/;"	f
+String	bitcoin/message.go	/^func (m *Message) String() string {$/;"	f
+String	lsp/message.go	/^func (m *Message) String() string {$/;"	f
+String	lsp/params.go	/^func (p *Params) String() string {$/;"	f
+String	lspnet/addr.go	/^func (a *UDPAddr) String() string { return a.naddr.String() }$/;"	f
+TestBasic1	lsp/lsp1_test.go	/^func TestBasic1(t *testing.T) {$/;"	f
+TestBasic2	lsp/lsp1_test.go	/^func TestBasic2(t *testing.T) {$/;"	f
+TestBasic3	lsp/lsp1_test.go	/^func TestBasic3(t *testing.T) {$/;"	f
+TestBasic4	lsp/lsp1_test.go	/^func TestBasic4(t *testing.T) {$/;"	f
+TestBasic5	lsp/lsp1_test.go	/^func TestBasic5(t *testing.T) {$/;"	f
+TestBasic6	lsp/lsp1_test.go	/^func TestBasic6(t *testing.T) {$/;"	f
+TestBasic7	lsp/lsp1_test.go	/^func TestBasic7(t *testing.T) {$/;"	f
+TestBasic8	lsp/lsp1_test.go	/^func TestBasic8(t *testing.T) {$/;"	f
+TestBasic9	lsp/lsp1_test.go	/^func TestBasic9(t *testing.T) {$/;"	f
+TestClientClose1	lsp/lsp3_test.go	/^func TestClientClose1(t *testing.T) {$/;"	f
+TestClientClose2	lsp/lsp3_test.go	/^func TestClientClose2(t *testing.T) {$/;"	f
+TestClientToServer1	lsp/lsp4_test.go	/^func TestClientToServer1(t *testing.T) {$/;"	f
+TestClientToServer2	lsp/lsp4_test.go	/^func TestClientToServer2(t *testing.T) {$/;"	f
+TestClientToServer3	lsp/lsp4_test.go	/^func TestClientToServer3(t *testing.T) {$/;"	f
+TestRobust1	lsp/lsp1_test.go	/^func TestRobust1(t *testing.T) {$/;"	f
+TestRobust2	lsp/lsp1_test.go	/^func TestRobust2(t *testing.T) {$/;"	f
+TestRobust3	lsp/lsp1_test.go	/^func TestRobust3(t *testing.T) {$/;"	f
+TestRobust4	lsp/lsp1_test.go	/^func TestRobust4(t *testing.T) {$/;"	f
+TestRobust5	lsp/lsp1_test.go	/^func TestRobust5(t *testing.T) {$/;"	f
+TestRobust6	lsp/lsp1_test.go	/^func TestRobust6(t *testing.T) {$/;"	f
+TestRoundTrip1	lsp/lsp4_test.go	/^func TestRoundTrip1(t *testing.T) {$/;"	f
+TestRoundTrip2	lsp/lsp4_test.go	/^func TestRoundTrip2(t *testing.T) {$/;"	f
+TestRoundTrip3	lsp/lsp4_test.go	/^func TestRoundTrip3(t *testing.T) {$/;"	f
+TestSendReceive1	lsp/lsp1_test.go	/^func TestSendReceive1(t *testing.T) {$/;"	f
+TestSendReceive2	lsp/lsp1_test.go	/^func TestSendReceive2(t *testing.T) {$/;"	f
+TestSendReceive3	lsp/lsp1_test.go	/^func TestSendReceive3(t *testing.T) {$/;"	f
+TestServerClose1	lsp/lsp3_test.go	/^func TestServerClose1(t *testing.T) {$/;"	f
+TestServerClose2	lsp/lsp3_test.go	/^func TestServerClose2(t *testing.T) {$/;"	f
+TestServerCloseConns1	lsp/lsp3_test.go	/^func TestServerCloseConns1(t *testing.T) {$/;"	f
+TestServerCloseConns2	lsp/lsp3_test.go	/^func TestServerCloseConns2(t *testing.T) {$/;"	f
+TestServerFastClose1	lsp/lsp4_test.go	/^func TestServerFastClose1(t *testing.T) {$/;"	f
+TestServerFastClose2	lsp/lsp4_test.go	/^func TestServerFastClose2(t *testing.T) {$/;"	f
+TestServerFastClose3	lsp/lsp4_test.go	/^func TestServerFastClose3(t *testing.T) {$/;"	f
+TestServerSlowStart1	lsp/lsp3_test.go	/^func TestServerSlowStart1(t *testing.T) {$/;"	f
+TestServerSlowStart2	lsp/lsp3_test.go	/^func TestServerSlowStart2(t *testing.T) {$/;"	f
+TestServerToClient1	lsp/lsp4_test.go	/^func TestServerToClient1(t *testing.T) {$/;"	f
+TestServerToClient2	lsp/lsp4_test.go	/^func TestServerToClient2(t *testing.T) {$/;"	f
+TestServerToClient3	lsp/lsp4_test.go	/^func TestServerToClient3(t *testing.T) {$/;"	f
+TestWindow1	lsp/lsp2_test.go	/^func TestWindow1(t *testing.T) {$/;"	f
+TestWindow2	lsp/lsp2_test.go	/^func TestWindow2(t *testing.T) {$/;"	f
+TestWindow3	lsp/lsp2_test.go	/^func TestWindow3(t *testing.T) {$/;"	f
+TestWindow4	lsp/lsp2_test.go	/^func TestWindow4(t *testing.T) {$/;"	f
+TestWindow5	lsp/lsp2_test.go	/^func TestWindow5(t *testing.T) {$/;"	f
+TestWindow6	lsp/lsp2_test.go	/^func TestWindow6(t *testing.T) {$/;"	f
+UDPAddr	lspnet/addr.go	/^type UDPAddr struct {$/;"	t
+UDPConn	lspnet/conn.go	/^type UDPConn struct {$/;"	t
+Write	lsp/client_impl.go	/^func (c *client) Write(payload []byte) (e error) {$/;"	f
+Write	lsp/server_impl.go	/^func (s *server) Write(connID int, payload []byte) error {$/;"	f
+Write	lspnet/conn.go	/^func (c *UDPConn) Write(b []byte) (int, error) {$/;"	f
+WriteToUDP	lspnet/conn.go	/^func (c *UDPConn) WriteToUDP(b []byte, addr *UDPAddr) (int, error) {$/;"	f
+bitcoin	bitcoin/hash.go	/^package bitcoin$/;"	p
+bitcoin	bitcoin/message.go	/^package bitcoin$/;"	p
+buildClient	lsp/lsp3_test.go	/^func (ts *closeTestSystem) buildClient(clientID int) {$/;"	f
+buildServer	lsp/lsp3_test.go	/^func (ts *closeTestSystem) buildServer() {$/;"	f
+checkClientReadMsgs	lsp/lsp2_test.go	/^func (ts *windowTestSystem) checkClientReadMsgs(sentMsgs []string) {$/;"	f
+checkServerReadMsgs	lsp/lsp2_test.go	/^func (ts *windowTestSystem) checkServerReadMsgs(sentMsgs []string) {$/;"	f
+client	lsp/client_impl.go	/^type client struct {$/;"	t
+clientLit	lsp/received_client.go	/^type clientLit struct {$/;"	t
+clientReadDropPercent	lspnet/staff.go	/^	clientReadDropPercent  uint32$/;"	v
+clientWrite	lsp/client_impl.go	/^func clientWrite(conn *lspnet.UDPConn, msg *Message) {$/;"	f
+clientWriteDropPercent	lspnet/staff.go	/^	clientWriteDropPercent uint32$/;"	v
+closeTestMode	lsp/lsp3_test.go	/^type closeTestMode int$/;"	t
+closeTestSystem	lsp/lsp3_test.go	/^type closeTestSystem struct {$/;"	t
+connectionMap	lspnet/net.go	/^	connectionMap = make(map[UDPConn]bool)$/;"	v
+createClient	lsp/lsp3_test.go	/^func (ts *closeTestSystem) createClient(index int) error {$/;"	f
+createClient	lsp/server_impl.go	/^func (s *server) createClient(msgWrap *msgWrapper) *clientLit {$/;"	f
+createServer	lsp/lsp3_test.go	/^func (ts *closeTestSystem) createServer() error {$/;"	f
+defaultDelayEpochs	lsp/lsp3_test.go	/^	defaultDelayEpochs = 3$/;"	c
+defaultNumMsgs	lsp/lsp3_test.go	/^	defaultNumMsgs     = 10$/;"	c
+doClientClose	lsp/lsp3_test.go	/^	doClientClose$/;"	c
+doClientToServer	lsp/lsp4_test.go	/^	doClientToServer$/;"	c
+doMaxCapacity	lsp/lsp2_test.go	/^	doMaxCapacity windowTestMode = iota$/;"	c
+doRoundTrip	lsp/lsp4_test.go	/^	doRoundTrip$/;"	c
+doScatteredMsgs	lsp/lsp2_test.go	/^	doScatteredMsgs$/;"	c
+doServerClose	lsp/lsp3_test.go	/^	doServerClose$/;"	c
+doServerCloseConns	lsp/lsp3_test.go	/^	doServerCloseConns$/;"	c
+doServerFastClose	lsp/lsp4_test.go	/^	doServerFastClose syncTestMode = iota$/;"	c
+doServerToClient	lsp/lsp4_test.go	/^	doServerToClient$/;"	c
+doSlowStart	lsp/lsp3_test.go	/^	doSlowStart closeTestMode = iota$/;"	c
+dropIt	lspnet/conn.go	/^func dropIt(dropPercent int) bool {$/;"	f
+enableDebugLogs	lspnet/conn.go	/^var enableDebugLogs uint32$/;"	v
+epochHandler	lsp/client_impl.go	/^func (c *client) epochHandler() {$/;"	f
+epochHandler	lsp/server_impl.go	/^func (s *server) epochHandler() {$/;"	f
+epochLimit	crunner/crunner.go	/^	epochLimit  = flag.Int("elim", lsp.DefaultEpochLimit, "epoch limit")$/;"	v
+epochLimit	srunner/srunner.go	/^	epochLimit  = flag.Int("elim", lsp.DefaultEpochLimit, "epoch limit")$/;"	v
+epochMillis	crunner/crunner.go	/^	epochMillis = flag.Int("ems", lsp.DefaultEpochMillis, "epoch duration (ms)")$/;"	v
+epochMillis	srunner/srunner.go	/^	epochMillis = flag.Int("ems", lsp.DefaultEpochMillis, "epoch duration (ms)")$/;"	v
+getClient	lsp/server_impl.go	/^func (s *server) getClient(msgWrap *msgWrapper) *clientLit {$/;"	f
+getClientByID	lsp/server_impl.go	/^func (s *server) getClientByID(connID int) (*clientLit, error) {$/;"	f
+host	crunner/crunner.go	/^	host        = flag.String("host", "localhost", "server host address")$/;"	v
+init	crunner/crunner.go	/^func init() {$/;"	f
+init	srunner/srunner.go	/^func init() {$/;"	f
+isLoggingEnabled	lspnet/conn.go	/^func isLoggingEnabled() bool {$/;"	f
+lsp	lsp/client_api.go	/^package lsp$/;"	p
+lsp	lsp/client_impl.go	/^package lsp$/;"	p
+lsp	lsp/lsp1_test.go	/^package lsp$/;"	p
+lsp	lsp/lsp2_test.go	/^package lsp$/;"	p
+lsp	lsp/lsp3_test.go	/^package lsp$/;"	p
+lsp	lsp/lsp4_test.go	/^package lsp$/;"	p
+lsp	lsp/message.go	/^package lsp$/;"	p
+lsp	lsp/params.go	/^package lsp$/;"	p
+lsp	lsp/received_client.go	/^package lsp$/;"	p
+lsp	lsp/server_api.go	/^package lsp$/;"	p
+lsp	lsp/server_impl.go	/^package lsp$/;"	p
+lspnet	lspnet/addr.go	/^package lspnet$/;"	p
+lspnet	lspnet/conn.go	/^package lspnet$/;"	p
+lspnet	lspnet/net.go	/^package lspnet$/;"	p
+lspnet	lspnet/staff.go	/^package lspnet$/;"	p
+main	bitcoin/client/client.go	/^func main() {$/;"	f
+main	bitcoin/client/client.go	/^package main$/;"	p
+main	bitcoin/miner/miner.go	/^func main() {$/;"	f
+main	bitcoin/miner/miner.go	/^package main$/;"	p
+main	bitcoin/server/server.go	/^func main() {$/;"	f
+main	bitcoin/server/server.go	/^package main$/;"	p
+main	crunner/crunner.go	/^func main() {$/;"	f
+main	crunner/crunner.go	/^package main$/;"	p
+main	srunner/srunner.go	/^func main() {$/;"	f
+main	srunner/srunner.go	/^package main$/;"	p
+makeParams	lsp/lsp1_test.go	/^func makeParams(epochLimit, epochMillis, windowSize int) *Params {$/;"	f
+makeRandMsgs	lsp/lsp2_test.go	/^func (ts *windowTestSystem) makeRandMsgs(numMsgs int) []string {$/;"	f
+mapMutex	lspnet/net.go	/^	mapMutex      sync.Mutex$/;"	v
+master	lsp/lsp4_test.go	/^func (ts *syncTestSystem) master() {$/;"	f
+messageMax	lsp/server_impl.go	/^	messageMax = 1024$/;"	c
+msgWrapper	lsp/server_impl.go	/^type msgWrapper struct {$/;"	t
+newClientLit	lsp/received_client.go	/^func newClientLit(connID int, wSize int, eLimit int, eMillis int, conn *lspnet.UDPConn) *clientLit {$/;"	f
+newCloseTestSystem	lsp/lsp3_test.go	/^func newCloseTestSystem(t *testing.T, mode closeTestMode) *closeTestSystem {$/;"	f
+newSyncTestSystem	lsp/lsp4_test.go	/^func newSyncTestSystem(t *testing.T, numClients, numMsgs int, mode syncTestMode, params *Params) *syncTestSystem {$/;"	f
+newTestSystem	lsp/lsp1_test.go	/^func newTestSystem(t *testing.T, numClients int, params *Params) *testSystem {$/;"	f
+newWindowTestSystem	lsp/lsp2_test.go	/^func newWindowTestSystem(t *testing.T, mode windowTestMode, numClients, numMsgs int, params *Params) *windowTestSystem {$/;"	f
+packetProcessor	lsp/server_impl.go	/^func (s *server) packetProcessor() {$/;"	f
+packetReceiver	lsp/client_impl.go	/^func (c *client) packetReceiver() {$/;"	f
+packetReceiver	lsp/server_impl.go	/^func (s *server) packetReceiver() {$/;"	f
+port	crunner/crunner.go	/^	port        = flag.Int("port", 9999, "server port number")$/;"	v
+port	srunner/srunner.go	/^	port        = flag.Int("port", 9999, "port number")$/;"	v
+printDisconnected	bitcoin/client/client.go	/^func printDisconnected() {$/;"	f
+printResult	bitcoin/client/client.go	/^func printResult(hash, nonce string) {$/;"	f
+processAck	lsp/client_impl.go	/^func (c *client) processAck(msg *Message) {$/;"	f
+processAck	lsp/received_client.go	/^func (c *clientLit) processAck(msg *Message) {$/;"	f
+processConn	lsp/received_client.go	/^func (c *clientLit) processConn(msg *Message) {$/;"	f
+processData	lsp/client_impl.go	/^func (c *client) processData(msg *Message) {$/;"	f
+processData	lsp/received_client.go	/^func (c *clientLit) processData(msg *Message) {$/;"	f
+processEpoch	lsp/client_impl.go	/^func (c *client) processEpoch() {$/;"	f
+processEpoch	lsp/received_client.go	/^func (c *clientLit) processEpoch() {$/;"	f
+processPacket	lsp/client_impl.go	/^func (c *client) processPacket() {$/;"	f
+processRead	lsp/client_impl.go	/^func (c *client) processRead() {$/;"	f
+processWrite	lsp/client_impl.go	/^func (c *client) processWrite() {$/;"	f
+processWrite	lsp/received_client.go	/^func (c *clientLit) processWrite() {$/;"	f
+randSleep	lsp/lsp1_test.go	/^func (ts *testSystem) randSleep() {$/;"	f
+readDrop	crunner/crunner.go	/^	readDrop    = flag.Int("rdrop", 0, "network read drop percent")$/;"	v
+readDrop	srunner/srunner.go	/^	readDrop    = flag.Int("rdrop", 0, "network read drop percent")$/;"	v
+readDropPercent	lspnet/staff.go	/^func readDropPercent(c *UDPConn) int {$/;"	f
+readFromAllClients	lsp/lsp2_test.go	/^func (ts *windowTestSystem) readFromAllClients(totalMsgs int, checkpoints ...int) {$/;"	f
+readFromServer	lsp/lsp2_test.go	/^func (ts *windowTestSystem) readFromServer(connID int, cli Client, totalMsgs int, checkpoints ...int) {$/;"	f
+readFromServer	lsp/received_client.go	/^func (c *clientLit) readFromServer() *readServerResult {$/;"	f
+readResult	lsp/client_impl.go	/^type readResult struct {$/;"	t
+readServerResult	lsp/server_impl.go	/^type readServerResult struct {$/;"	t
+run	lsp/client_impl.go	/^func (c *client) run() {$/;"	f
+run	lsp/server_impl.go	/^func (s *server) run() {$/;"	f
+runClient	crunner/crunner.go	/^func runClient(cli lsp.Client) {$/;"	f
+runClient	lsp/lsp1_test.go	/^func (ts *testSystem) runClient(clientID int, doneChan chan<- bool) {$/;"	f
+runClient	lsp/lsp4_test.go	/^func (ts *syncTestSystem) runClient(clienti int) {$/;"	f
+runMaxCapacityTest	lsp/lsp2_test.go	/^func (ts *windowTestSystem) runMaxCapacityTest() {$/;"	f
+runNetwork	lsp/lsp4_test.go	/^func (ts *syncTestSystem) runNetwork() {$/;"	f
+runScatteredMsgsTest	lsp/lsp2_test.go	/^func (ts *windowTestSystem) runScatteredMsgsTest() {$/;"	f
+runServer	lsp/lsp1_test.go	/^func (ts *testSystem) runServer() {$/;"	f
+runServer	lsp/lsp4_test.go	/^func (ts *syncTestSystem) runServer() {$/;"	f
+runServer	srunner/srunner.go	/^func runServer(srv lsp.Server) {$/;"	f
+runTest	lsp/lsp1_test.go	/^func (ts *testSystem) runTest(timeout int) {$/;"	f
+runTest	lsp/lsp2_test.go	/^func (ts *windowTestSystem) runTest() {$/;"	f
+runTest	lsp/lsp3_test.go	/^func (ts *closeTestSystem) runTest() {$/;"	f
+runTest	lsp/lsp4_test.go	/^func (ts *syncTestSystem) runTest() {$/;"	f
+sendAck	lsp/received_client.go	/^func (c *clientLit) sendAck(sn int) {$/;"	f
+server	lsp/server_impl.go	/^type server struct {$/;"	t
+serverEpoch	lsp/server_impl.go	/^func (s *server) serverEpoch() {$/;"	f
+serverReadDropPercent	lspnet/staff.go	/^	serverReadDropPercent  uint32$/;"	v
+serverWriteDropPercent	lspnet/staff.go	/^	serverWriteDropPercent uint32$/;"	v
+setClientWriteDropPercent	lsp/lsp2_test.go	/^func (ts *windowTestSystem) setClientWriteDropPercent(percent int) {$/;"	f
+setDescription	lsp/lsp1_test.go	/^func (ts *testSystem) setDescription(desc string) *testSystem {$/;"	f
+setDescription	lsp/lsp2_test.go	/^func (ts *windowTestSystem) setDescription(desc string) *windowTestSystem {$/;"	f
+setDescription	lsp/lsp3_test.go	/^func (ts *closeTestSystem) setDescription(t string) *closeTestSystem {$/;"	f
+setDescription	lsp/lsp4_test.go	/^func (ts *syncTestSystem) setDescription(desc string) *syncTestSystem {$/;"	f
+setDropPercent	lsp/lsp1_test.go	/^func (ts *testSystem) setDropPercent(p int) *testSystem {$/;"	f
+setMaxEpochs	lsp/lsp2_test.go	/^func (ts *windowTestSystem) setMaxEpochs(maxEpochs int) *windowTestSystem {$/;"	f
+setMaxEpochs	lsp/lsp3_test.go	/^func (ts *closeTestSystem) setMaxEpochs(maxEpochs int) *closeTestSystem {$/;"	f
+setMaxEpochs	lsp/lsp4_test.go	/^func (ts *syncTestSystem) setMaxEpochs(maxEpochs int) *syncTestSystem {$/;"	f
+setMaxSleepMillis	lsp/lsp1_test.go	/^func (ts *testSystem) setMaxSleepMillis(ms int) *testSystem {$/;"	f
+setNumClients	lsp/lsp3_test.go	/^func (ts *closeTestSystem) setNumClients(numClients int) *closeTestSystem {$/;"	f
+setNumMsgs	lsp/lsp1_test.go	/^func (ts *testSystem) setNumMsgs(n int) *testSystem {$/;"	f
+setParams	lsp/lsp3_test.go	/^func (ts *closeTestSystem) setParams(epochLimit, epochMillis, windowSize int) *closeTestSystem {$/;"	f
+setServerWriteDropPercent	lsp/lsp2_test.go	/^func (ts *windowTestSystem) setServerWriteDropPercent(percent int) {$/;"	f
+showLogs	crunner/crunner.go	/^	showLogs    = flag.Bool("v", false, "show crunner logs")$/;"	v
+showLogs	srunner/srunner.go	/^	showLogs    = flag.Bool("v", false, "show srunner logs")$/;"	v
+signalClients	lsp/lsp4_test.go	/^func (ts *syncTestSystem) signalClients() {$/;"	f
+signalServer	lsp/lsp4_test.go	/^func (ts *syncTestSystem) signalServer() {$/;"	f
+streamToClient	lsp/lsp2_test.go	/^func (ts *windowTestSystem) streamToClient(connID int, sendMsgs []string) {$/;"	f
+streamToServer	lsp/lsp2_test.go	/^func (ts *windowTestSystem) streamToServer(connID int, cli Client, sendMsgs []string) {$/;"	f
+syncTestMode	lsp/lsp4_test.go	/^type syncTestMode int$/;"	t
+syncTestSystem	lsp/lsp4_test.go	/^type syncTestSystem struct {$/;"	t
+testSystem	lsp/lsp1_test.go	/^type testSystem struct {$/;"	t
+toNet	lspnet/addr.go	/^func (a *UDPAddr) toNet() *net.UDPAddr {$/;"	f
+toggleNetwork	lsp/lsp4_test.go	/^func (ts *syncTestSystem) toggleNetwork() {$/;"	f
+waitForClients	lsp/lsp2_test.go	/^func (ts *windowTestSystem) waitForClients() {$/;"	f
+waitForClients	lsp/lsp4_test.go	/^func (ts *syncTestSystem) waitForClients() {$/;"	f
+waitForServer	lsp/lsp2_test.go	/^func (ts *windowTestSystem) waitForServer() {$/;"	f
+waitForServer	lsp/lsp4_test.go	/^func (ts *syncTestSystem) waitForServer() {$/;"	f
+windowSize	crunner/crunner.go	/^	windowSize  = flag.Int("wsize", lsp.DefaultWindowSize, "window size")$/;"	v
+windowSize	srunner/srunner.go	/^	windowSize  = flag.Int("wsize", lsp.DefaultWindowSize, "window size")$/;"	v
+windowTestMode	lsp/lsp2_test.go	/^type windowTestMode int$/;"	t
+windowTestSystem	lsp/lsp2_test.go	/^type windowTestSystem struct {$/;"	t
+write	lsp/received_client.go	/^func write(conn *lspnet.UDPConn, m *msgWrapper) {$/;"	f
+write	lspnet/conn.go	/^func (c *UDPConn) write(b []byte, addr *UDPAddr) (int, error) {$/;"	f
+writeDrop	crunner/crunner.go	/^	writeDrop   = flag.Int("wdrop", 0, "network write drop percent")$/;"	v
+writeDrop	srunner/srunner.go	/^	writeDrop   = flag.Int("wdrop", 0, "network write drop percent")$/;"	v
+writeDropPercent	lspnet/staff.go	/^func writeDropPercent(c *UDPConn) int {$/;"	f
+writeParam	lsp/server_impl.go	/^type writeParam struct {$/;"	t
