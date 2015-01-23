@@ -5,6 +5,7 @@ package lsp
 import (
 	"encoding/json"
 	"errors"
+    "io/ioutil"
 	"log"
 	"os"
 	"strconv"
@@ -15,7 +16,7 @@ import (
 
 var (
 	LOGE = log.New(os.Stderr, "Error ", log.Lmicroseconds|log.Lshortfile)
-	LOGV = log.New(os.Stdout, "VERBOSE ", log.Lmicroseconds|log.Lshortfile)
+	LOGV = log.New(ioutil.Discard, "VERBOSE ", log.Lmicroseconds|log.Lshortfile)
 )
 
 const (
@@ -188,14 +189,14 @@ func (s *server) packetProcessor() {
 			LOGV.Println("server epoch end, the server is not closed")
 		case msgWrap := <-s.msgChan:
 			msg := msgWrap.msg
-            LOGV.Printf("\nreceive data: %s\n", msg.String())
+            LOGV.Printf("\nreceived msg: %s\n", msg.String())
 			switch msg.Type {
 			case MsgConnect: // handle connect request from client
 				c := s.getClient(msgWrap)
 				if c == nil {
 					c = s.createClient(msgWrap)
 				}
-				<-s.epochCountMutex // 不懂
+				<-s.epochCountMutex // 锁
 				c.epochCount = 0
 				s.epochCountMutex <- struct{}{}
 				c.processConn(msg)

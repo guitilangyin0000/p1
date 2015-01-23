@@ -86,6 +86,7 @@ func NewClient(hostport string, params *Params) (Client, error) {
     cli.epochCount = 0
     cli.epochCountMutex = make(chan struct{}, 1)
     cli.epochLimit = params.EpochLimit
+
     cli.epochMillis = params.EpochMillis
     cli.windowSize = params.WindowSize
     cli.epochOutOfLimit = make(chan struct{})
@@ -96,6 +97,8 @@ func NewClient(hostport string, params *Params) (Client, error) {
     cli.writeList = list.New()
     cli.readPend = false
     cli.readReply = make(chan readResult)
+
+    cli.readRequest = make(chan struct{})
     cli.receiveDataCache = make(map[int]*Message)
     cli.receiveDataNext = 1
     cli.receiveRecent = list.New()
@@ -126,13 +129,16 @@ func NewClient(hostport string, params *Params) (Client, error) {
 }
 
 func (c *client) run() {
-    addr, err := lspnet.ResolveUDPAddr("udp", c.hostport+":")
+    addr, err := lspnet.ResolveUDPAddr("udp", c.hostport)
     if err != nil {
+        close(c.connChan)
         LOGE.Fatalln("run resolveudpaddr error")
     }
     conn, err := lspnet.DialUDP("udp", nil, addr)
     if err != nil {
         LOGE.Fatalln("run lspnet dialUDP error")
+        close(c.connChan)
+        return
     }
     c.conn = conn
     connmsg := NewConnect() // 返回的是*Message
@@ -153,11 +159,12 @@ func (c *client) run() {
 }
 
 func (c *client) packetReceiver() {
+    var msg [messageMax]byte
     for {
-        var msg [messageMax]byte
         n, err := c.conn.Read(msg[:])
         if err != nil {
             LOGE.Println(err)
+            continue
         }
         connMsg := new(Message)
         json.Unmarshal(msg[:n], connMsg)
@@ -177,7 +184,7 @@ func (c *client) processPacket() {
                 c.closeReply<-true // 表示connection has been already closed
                 return
             }
-            LOGV.Println("received new packet " + msg.String())
+            LOGV.Println("\nreceived new packet " + msg.String())
             switch msg.Type {
             case MsgAck:
                 c.processAck(msg)
@@ -214,6 +221,7 @@ func (c *client) processPacket() {
             if !c.active && c.allClean {
                 c.closeReply<-false
             }
+            c.active = false    // mark add
             c.closePend = true
             if c.allClean {
                 close(c.shutdown)
@@ -269,6 +277,11 @@ func (c *client) processEpoch() {
         clientWrite(c.conn, connect)
     }
 
+    if c.receiveDataNext == 1 {
+        ack := NewAck(c.connid, 0)
+        clientWrite(c.conn, ack)
+    }
+
     for sn := c.sendDataNotAckEarliest; sn < c.sendDataNotAckEarliest + c.windowSize; sn++ {
         msg, ok := c.sendDataCache[sn]
         if ok {
@@ -288,7 +301,7 @@ func (c *client) processEpoch() {
         ack := NewAck(curr.Value.(*Message).ConnID, curr.Value.(*Message).SeqNum)
         clientWrite(c.conn, ack)
     }
-    // 不太懂
+    // 可能现在处于一个用户调用了Write()的时候,但是发送的缓存ack是之前的，不是最新的
     c.processWrite()
 }
 /**
@@ -296,7 +309,7 @@ func (c *client) processEpoch() {
 */
 func (c *client) processAck(msg *Message) {
     if msg.SeqNum == c.sendDataNotAckEarliest {
-        if msg.SeqNum == 0 { // client send connect has been acked，只有connect返回的ack的SeqNum = 0
+        if c.sendDataNotAckEarliest == 0 { // client send connect has been acked，只有connect返回的ack的SeqNum = 0
             c.connid = msg.ConnID
             c.connChan <- 1
             LOGV.Println("connection confirmed")
@@ -383,6 +396,7 @@ func (c *client) processData(msg *Message) {
                 c.receiveDataNext++
                 _, ok = c.receiveDataCache[c.receiveDataNext]
             }
+            c.processRead()  // we may have new data for pending Read()
         } else {  // 感觉窗口好像没发挥作用，这里凡是大于期待接收的data序列号都会缓存起来，并不会因为窗口而丢弃
             c.receiveDataCache[msg.SeqNum] = msg
             ack := NewAck(c.connid, msg.SeqNum)

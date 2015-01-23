@@ -89,6 +89,7 @@ func write(conn *lspnet.UDPConn, m *msgWrapper) {
         LOGE.Fatalln("clientLit write error")
     }
     LOGV.Printf("clientLit %d write %d bytes %s to client\n", m.msg.ConnID, n, msg)
+    LOGV.Printf("clientLit %d write %d bytes %s to client\n", m.msg.ConnID, n, msg)
 }
 /**
 ** process new connection
